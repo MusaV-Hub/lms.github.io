@@ -1,0 +1,3126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GWConnect LMS - Professional Learning Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-green': '#1B4332',
+                        'light-green': '#40916C',
+                        'gold': '#FFD700'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-heading { font-family: 'Poppins', sans-serif; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .table-container { overflow-x: auto; }
+        .evidence-preview { max-width: 200px; max-height: 150px; object-fit: cover; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-dark-green shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-white font-heading">GWConnect <span class="text-gold">LMS</span></h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showLogin()" class="bg-light-green hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors duration-200">Login</button>
+                    <button onclick="showRegister()" class="border border-white text-white hover:bg-white hover:text-dark-green px-4 py-2 rounded-md transition-colors duration-200">Register</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="landing" class="pt-16 min-h-screen bg-gradient-to-br from-dark-green via-light-green to-blue-600 flex items-center justify-center">
+        <div class="text-center text-white px-4 fade-in max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 font-heading">Welcome to <span class="text-gold">GWConnect LMS</span></h1>
+            <p class="text-xl md:text-2xl mb-8">Professional Learning Management System for Interns Training</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-3xl mx-auto">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-gold">500+</div>
+                    <div class="text-sm">Active Interns</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-gold">10+</div>
+                    <div class="text-sm">Expert Qualifications</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-gold">90%</div>
+                    <div class="text-sm">Internship Success Rate</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-gold">8 Hours</div>
+                    <div class="text-sm">Support</div>
+                </div>
+            </div>
+            
+            <div class="space-y-4 md:space-y-0 md:space-x-6 md:flex md:justify-center">
+                <button onclick="showLogin()" class="w-full md:w-auto bg-white text-dark-green px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+                    🚀 Start Learning Now
+                </button>
+                <button onclick="showDemo()" class="w-full md:w-auto bg-gold text-dark-green px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 transition-colors duration-200">
+                    🎥 Watch Demo
+                </button>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="mt-12 text-center">
+                <div class="bg-white bg-opacity-20 rounded-lg p-6 max-w-md mx-auto">
+                    <h3 class="text-xl font-semibold mb-4">Contact GWConnect</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center justify-center space-x-2">
+                            <span>📞</span>
+                            <span>+27 12 001 4230</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2">
+                            <span>📍</span>
+                            <span>385 Roslyn Avenue, Waterkloof Glen, Pretoria, 0181</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-dark-green">Login</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <button type="submit" class="w-full bg-light-green text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors duration-200">Login</button>
+            </form>
+            <div class="mt-4 text-center">
+                <span class="text-sm text-gray-600">Don't have an account? </span>
+                <button onclick="showRegister()" class="text-sm text-light-green hover:underline">Register here</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 fade-in max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-dark-green">Register</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Full Names</label>
+                    <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Cell Number</label>
+                    <input type="tel" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green" placeholder="e.g., +27 12 345 6789">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">ID Number</label>
+                    <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Registration Type</label>
+                    <select id="registrationType" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green" onchange="toggleRegistrationFields()">
+                        <option value="">Select Registration Type</option>
+                        <option value="intern">Intern</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <div id="companyField" class="mb-4 hidden">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Company</label>
+                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div id="departmentField" class="mb-4 hidden">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Department</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                        <option value="">Select Department</option>
+                        <option value="administration">Administration</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="finance">Finance</option>
+                        <option value="operations">Operations</option>
+                        <option value="it">Information Technology</option>
+                        <option value="marketing">Marketing</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="password" required minlength="8" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+                    <input type="password" id="confirmPassword" required minlength="8" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <button type="submit" class="w-full bg-light-green text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors duration-200">Register</button>
+            </form>
+            <div class="mt-4 text-center">
+                <span class="text-sm text-gray-600">Already have an account? </span>
+                <button onclick="showLogin()" class="text-sm text-light-green hover:underline">Login here</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="hidden min-h-screen bg-gray-50 pt-16">
+        <!-- Admin Navigation -->
+        <div class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <h1 class="text-2xl font-bold text-dark-green">Admin Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-600">Welcome, <span id="adminName">Admin</span></span>
+                        <button onclick="switchToLearnerView()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200">Switch to Learner View</button>
+                        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-200">Logout</button>
+                    </div>
+                </div>
+                <!-- Admin Navigation Tabs -->
+                <div class="flex space-x-8 border-t">
+                    <button onclick="showAdminSection('overview')" class="admin-tab py-4 px-2 border-b-2 border-light-green text-light-green font-medium">Overview</button>
+                    <button onclick="showAdminSection('learners')" class="admin-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Learner Management</button>
+                    <button onclick="showAdminSection('courses')" class="admin-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Course Management</button>
+                    <button onclick="showAdminSection('enrollments')" class="admin-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Course Enrollments</button>
+                    <button onclick="showAdminSection('reports')" class="admin-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Reports</button>
+                    <button onclick="showAdminSection('evidence')" class="admin-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Evidence Review</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Overview Section -->
+            <div id="adminOverview" class="admin-section">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-light-green rounded-lg">
+                                <span class="text-white text-xl">👥</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Active Interns</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="activeInternsCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-gold rounded-lg">
+                                <span class="text-white text-xl">📚</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Available Courses</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="coursesCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-blue-500 rounded-lg">
+                                <span class="text-white text-xl">📊</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Completion Rate</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="completionRate">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-green-500 rounded-lg">
+                                <span class="text-white text-xl">📋</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Evidence Submitted</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="evidenceCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button onclick="showCreateCourse()" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-light-green hover:bg-green-50 transition-colors duration-200">
+                            <div class="text-center">
+                                <span class="text-2xl mb-2 block">➕</span>
+                                <span class="text-sm font-medium text-gray-700">Create Course</span>
+                            </div>
+                        </button>
+                        <button onclick="downloadAllLogbooks()" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-light-green hover:bg-green-50 transition-colors duration-200">
+                            <div class="text-center">
+                                <span class="text-2xl mb-2 block">📥</span>
+                                <span class="text-sm font-medium text-gray-700">Download Logbooks</span>
+                            </div>
+                        </button>
+                        <button onclick="showAdminSection('evidence')" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-light-green hover:bg-green-50 transition-colors duration-200">
+                            <div class="text-center">
+                                <span class="text-2xl mb-2 block">🔍</span>
+                                <span class="text-sm font-medium text-gray-700">Review Evidence</span>
+                            </div>
+                        </button>
+                        <button onclick="generateReports()" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-light-green hover:bg-green-50 transition-colors duration-200">
+                            <div class="text-center">
+                                <span class="text-2xl mb-2 block">📊</span>
+                                <span class="text-sm font-medium text-gray-700">Generate Reports</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learner Management Section -->
+            <div id="adminLearners" class="admin-section hidden">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900">Learner Management</h3>
+                            <div class="flex space-x-3">
+                                <input type="text" placeholder="Search learners..." class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                <button onclick="downloadImportTemplate()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Download Template</button>
+                                <button onclick="showImportLearners()" class="bg-gold text-dark-green px-4 py-2 rounded-md hover:bg-yellow-400">Import Learners</button>
+                                <button onclick="showAddLearner()" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Add Learner</button>
+                                <button onclick="exportLearners()" class="bg-light-green text-white px-4 py-2 rounded-md hover:bg-green-600">Export</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Learner</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evidence</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="learnersTable" class="bg-white divide-y divide-gray-200">
+                                <!-- Learners will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Management Section -->
+            <div id="adminCourses" class="admin-section hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Course Management</h3>
+                        <button onclick="showCreateCourse()" class="bg-light-green text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors duration-200">Create New Course</button>
+                    </div>
+                    <div id="coursesList" class="space-y-4">
+                        <!-- Courses will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="adminReports" class="admin-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Progress Reports</h3>
+                        <div class="space-y-4">
+                            <button onclick="generateProgressReport()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Overall Progress Report</h4>
+                                        <p class="text-sm text-gray-600">Complete overview of all learner progress</p>
+                                    </div>
+                                    <span class="text-light-green">📊</span>
+                                </div>
+                            </button>
+                            <button onclick="generateCompletionReport()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Completion Report</h4>
+                                        <p class="text-sm text-gray-600">Track course completion rates</p>
+                                    </div>
+                                    <span class="text-light-green">✅</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Evidence Reports</h3>
+                        <div class="space-y-4">
+                            <button onclick="generateEvidenceReport()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Evidence Submission Report</h4>
+                                        <p class="text-sm text-gray-600">Track evidence submissions by learners</p>
+                                    </div>
+                                    <span class="text-light-green">📋</span>
+                                </div>
+                            </button>
+                            <button onclick="downloadAllLogbooks()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Download All Logbooks</h4>
+                                        <p class="text-sm text-gray-600">Export all learner logbooks as PDF</p>
+                                    </div>
+                                    <span class="text-light-green">📥</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Enrollments Section -->
+            <div id="adminEnrollments" class="admin-section hidden">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900">Course Enrollments</h3>
+                            <button onclick="showEnrollLearner()" class="bg-light-green text-white px-4 py-2 rounded-md hover:bg-green-600">Enroll Learner</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <!-- Enrollment filters -->
+                        <div class="mb-6 flex space-x-4">
+                            <select id="enrollmentCourseFilter" onchange="filterEnrollments()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                <option value="">All Courses</option>
+                            </select>
+                            <select id="enrollmentStatusFilter" onchange="filterEnrollments()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="paused">Paused</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Enrollments list -->
+                        <div id="enrollmentsList">
+                            <!-- Enrollments will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Review Section -->
+            <div id="adminEvidence" class="admin-section hidden">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Evidence Review</h3>
+                    </div>
+                    <div id="evidenceReviewList" class="p-6">
+                        <!-- Evidence submissions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learner Dashboard -->
+    <div id="learnerDashboard" class="hidden min-h-screen bg-gray-50 pt-16">
+        <div class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <h1 class="text-2xl font-bold text-dark-green">My Learning Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-600">Welcome, <span id="learnerName">Learner</span></span>
+                        <button onclick="downloadMyLogbook()" class="bg-gold text-dark-green px-4 py-2 rounded-md hover:bg-yellow-400 transition-colors duration-200">Download My Logbook</button>
+                        <button id="switchBackBtn" onclick="switchBackToAdmin()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200 hidden">Back to Admin</button>
+                        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-200">Logout</button>
+                    </div>
+                </div>
+                <!-- Learner Navigation Tabs -->
+                <div class="flex space-x-8 border-t">
+                    <button onclick="showLearnerSection('overview')" class="learner-tab py-4 px-2 border-b-2 border-light-green text-light-green font-medium">Course Overview</button>
+                    <button onclick="showLearnerSection('progress')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">My Progress</button>
+                    <button onclick="showLearnerSection('evidence')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">My Evidence</button>
+                    <button onclick="showLearnerSection('reports')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Reports & Downloads</button>
+                    <button onclick="showLearnerSection('support')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Help & Support</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Course Overview Section -->
+            <div id="learnerOverview" class="learner-section">
+                <!-- Progress Overview -->
+                <div class="bg-gradient-to-r from-light-green to-dark-green rounded-xl p-6 mb-8 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-2">Welcome back! 👋</h2>
+                            <p class="opacity-90">Complete practical exercises and build your professional portfolio</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-gold" id="learnerProgress">0%</div>
+                            <div class="text-sm opacity-80">Course Completion</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Course -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h2 class="text-2xl font-bold text-dark-green mb-6">Management Assistant Professional Course</h2>
+                    <div id="courseModules" class="space-y-6">
+                        <!-- Modules will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Progress Section -->
+            <div id="learnerProgress" class="learner-section hidden">
+                <!-- Progress Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-light-green rounded-lg">
+                                <span class="text-white text-xl">📚</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Modules Completed</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="completedModulesCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-gold rounded-lg">
+                                <span class="text-white text-xl">📋</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Evidence Submitted</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="evidenceSubmittedCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-blue-500 rounded-lg">
+                                <span class="text-white text-xl">⏱️</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Days Active</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="daysActiveCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-green-500 rounded-lg">
+                                <span class="text-white text-xl">🎯</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Overall Progress</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="overallProgressPercent">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Timeline -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Learning Timeline</h3>
+                    <div id="progressTimeline" class="space-y-4">
+                        <!-- Timeline will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Module Progress Chart -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Module Progress</h3>
+                    <div id="moduleProgressChart" class="space-y-4">
+                        <!-- Module progress bars will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Evidence Section -->
+            <div id="learnerEvidence" class="learner-section hidden">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900">My Evidence Submissions</h3>
+                            <div class="flex space-x-3">
+                                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                    <option value="all">All Submissions</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="pending">Pending Review</option>
+                                    <option value="rejected">Needs Revision</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="myEvidenceList" class="p-6">
+                        <!-- Evidence submissions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports & Downloads Section -->
+            <div id="learnerReports" class="learner-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Download Options -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Download Options</h3>
+                        <div class="space-y-4">
+                            <button onclick="downloadMyLogbook()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Complete Logbook</h4>
+                                        <p class="text-sm text-gray-600">Download your complete learning logbook with all evidence</p>
+                                    </div>
+                                    <span class="text-light-green">📥</span>
+                                </div>
+                            </button>
+                            <button onclick="downloadProgressReport()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Progress Report</h4>
+                                        <p class="text-sm text-gray-600">Detailed report of your learning progress and achievements</p>
+                                    </div>
+                                    <span class="text-light-green">📊</span>
+                                </div>
+                            </button>
+                            <button onclick="downloadCertificate()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Course Certificate</h4>
+                                        <p class="text-sm text-gray-600">Download your completion certificate (available when course is complete)</p>
+                                    </div>
+                                    <span class="text-light-green">🏆</span>
+                                </div>
+                            </button>
+                            <button onclick="downloadEvidencePortfolio()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Evidence Portfolio</h4>
+                                        <p class="text-sm text-gray-600">Compiled portfolio of all your submitted evidence</p>
+                                    </div>
+                                    <span class="text-light-green">📁</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Personal Reports -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Personal Reports</h3>
+                        <div class="space-y-4">
+                            <button onclick="viewDetailedProgress()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Detailed Progress Analysis</h4>
+                                        <p class="text-sm text-gray-600">In-depth analysis of your learning journey</p>
+                                    </div>
+                                    <span class="text-light-green">📈</span>
+                                </div>
+                            </button>
+                            <button onclick="viewCompetencyMap()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Skills & Competency Map</h4>
+                                        <p class="text-sm text-gray-600">Visual map of skills you've developed</p>
+                                    </div>
+                                    <span class="text-light-green">🎯</span>
+                                </div>
+                            </button>
+                            <button onclick="viewLearningInsights()" class="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-medium">Learning Insights</h4>
+                                        <p class="text-sm text-gray-600">Personalized insights about your learning patterns</p>
+                                    </div>
+                                    <span class="text-light-green">💡</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="mt-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Statistics</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-600" id="totalHoursSpent">0</div>
+                            <div class="text-sm text-gray-600">Hours Spent Learning</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-600" id="averageScore">0%</div>
+                            <div class="text-sm text-gray-600">Average Score</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600" id="streakDays">0</div>
+                            <div class="text-sm text-gray-600">Learning Streak</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-600" id="nextMilestone">Next Goal</div>
+                            <div class="text-sm text-gray-600">Upcoming Milestone</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help & Support Section -->
+            <div id="learnerSupport" class="learner-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Help Resources -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Help Resources</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 border rounded-lg">
+                                <h4 class="font-medium text-gray-900 mb-2">📚 Learning Guide</h4>
+                                <p class="text-sm text-gray-600 mb-3">Step-by-step guide on how to use the platform effectively</p>
+                                <button onclick="viewLearningGuide()" class="text-light-green hover:text-green-600 text-sm font-medium">View Guide</button>
+                            </div>
+                            <div class="p-4 border rounded-lg">
+                                <h4 class="font-medium text-gray-900 mb-2">❓ Frequently Asked Questions</h4>
+                                <p class="text-sm text-gray-600 mb-3">Common questions and answers about the course</p>
+                                <button onclick="viewFAQ()" class="text-light-green hover:text-green-600 text-sm font-medium">View FAQ</button>
+                            </div>
+                            <div class="p-4 border rounded-lg">
+                                <h4 class="font-medium text-gray-900 mb-2">🎥 Video Tutorials</h4>
+                                <p class="text-sm text-gray-600 mb-3">Watch video tutorials on platform features</p>
+                                <button onclick="viewTutorials()" class="text-light-green hover:text-green-600 text-sm font-medium">Watch Videos</button>
+                            </div>
+                            <div class="p-4 border rounded-lg">
+                                <h4 class="font-medium text-gray-900 mb-2">📋 Evidence Guidelines</h4>
+                                <p class="text-sm text-gray-600 mb-3">Best practices for submitting quality evidence</p>
+                                <button onclick="viewEvidenceGuidelines()" class="text-light-green hover:text-green-600 text-sm font-medium">View Guidelines</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Support -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Contact Support</h3>
+                        <div class="space-y-4 mb-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-light-green rounded-full p-2">
+                                    <span class="text-white">📞</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Phone Support</p>
+                                    <p class="text-gray-600">+27 12 001 4230</p>
+                                    <p class="text-xs text-gray-500">Mon-Fri, 8:00 AM - 5:00 PM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-light-green rounded-full p-2">
+                                    <span class="text-white">📧</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Email Support</p>
+                                    <p class="text-gray-600">support@gwconnect.org/p>
+                                    <p class="text-xs text-gray-500">Response within 24 hours</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Support Form -->
+                        <form onsubmit="handleSupportRequest(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Support Category</label>
+                                <select required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                    <option value="">Select Category</option>
+                                    <option value="technical">Technical Issue</option>
+                                    <option value="course">Course Content Question</option>
+                                    <option value="evidence">Evidence Submission Help</option>
+                                    <option value="progress">Progress Tracking</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+                                <textarea rows="4" required placeholder="Describe your question or issue..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-light-green text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors duration-200">
+                                Send Support Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Creation Modal -->
+    <div id="createCourseModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-4xl w-full mx-4 max-h-screen overflow-y-auto fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-dark-green">Create New Course</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <form onsubmit="handleCreateCourse(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Course Title</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Duration</label>
+                        <input type="text" placeholder="e.g., 40 hours" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Course Description</label>
+                    <textarea rows="3" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green"></textarea>
+                </div>
+                <div class="mt-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Modules & Practical Exercises</label>
+                    <div id="modulesList" class="space-y-4">
+                        <div class="module-item border rounded-lg p-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <input type="text" placeholder="Module Title" class="module-title px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                <button type="button" onclick="removeModule(this)" class="text-red-500 hover:text-red-700 px-4 py-2 border border-red-300 rounded-md">Remove Module</button>
+                            </div>
+                            <textarea placeholder="Module Description" class="module-description w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green mb-4" rows="2"></textarea>
+                            <textarea placeholder="Practical Exercise Instructions (What should the intern do and submit as evidence?)" class="module-exercise w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addModule()" class="mt-3 text-light-green hover:text-green-600 font-medium">+ Add Module</button>
+                </div>
+                <div class="flex justify-end space-x-4 mt-8">
+                    <button type="button" onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-light-green text-white rounded-md hover:bg-green-600">Create Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Learner Modal -->
+    <div id="addLearnerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 max-h-screen overflow-y-auto fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-dark-green">Add New Learner</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <form onsubmit="handleAddLearner(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                    <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">ID Number</label>
+                    <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Department</label>
+                    <select required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                        <option value="">Select Department</option>
+                        <option value="administration">Administration</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="finance">Finance</option>
+                        <option value="operations">Operations</option>
+                        <option value="it">Information Technology</option>
+                        <option value="marketing">Marketing</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Company</label>
+                    <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Temporary Password</label>
+                    <input type="password" required minlength="8" placeholder="Learner will change on first login" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-light-green text-white rounded-md hover:bg-green-600">Add Learner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Learners Modal -->
+    <div id="importLearnersModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-dark-green">Import Learners</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            
+            <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 class="font-semibold text-blue-900 mb-2">📋 Import Instructions</h3>
+                <ol class="text-sm text-blue-800 space-y-1">
+                    <li>1. Download the import template using the button below</li>
+                    <li>2. Fill in learner details in the Excel/CSV file</li>
+                    <li>3. Save the file and upload it here</li>
+                    <li>4. Review the preview and confirm import</li>
+                </ol>
+            </div>
+
+            <div class="mb-6">
+                <button onclick="downloadImportTemplate()" class="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 transition-colors duration-200 mb-4">
+                    📥 Download Import Template
+                </button>
+            </div>
+
+            <form onsubmit="handleImportLearners(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Upload Learners File</label>
+                    <input type="file" accept=".csv,.xlsx,.xls" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                    <p class="text-xs text-gray-500 mt-1">Accepted formats: CSV, Excel (.xlsx, .xls)</p>
+                </div>
+                
+                <div id="importPreview" class="mb-6 hidden">
+                    <h3 class="font-semibold text-gray-900 mb-3">Import Preview</h3>
+                    <div class="border rounded-lg overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="importPreviewBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Preview rows will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-light-green text-white rounded-md hover:bg-green-600">Import Learners</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Enroll Learner Modal -->
+    <div id="enrollLearnerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 max-h-screen overflow-y-auto fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-dark-green">Enroll Learner in Course</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <form onsubmit="handleEnrollLearner(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Select Learner</label>
+                    <select id="enrollLearnerSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                        <option value="">Choose a learner...</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Select Course</label>
+                    <select id="enrollCourseSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                        <option value="">Choose a course...</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Enrollment Status</label>
+                    <select required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                        <option value="active">Active</option>
+                        <option value="paused">Paused</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
+                    <input type="date" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-light-green text-white rounded-md hover:bg-green-600">Enroll Learner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Evidence Submission Modal -->
+    <div id="evidenceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-dark-green">Submit Evidence</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <form onsubmit="handleEvidenceSubmission(event)">
+                <input type="hidden" id="evidenceModuleId">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Module</label>
+                    <input type="text" id="evidenceModuleName" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Exercise Instructions</label>
+                    <div id="evidenceInstructions" class="p-3 bg-blue-50 rounded-md text-sm text-blue-800"></div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Evidence Description</label>
+                    <textarea rows="4" required placeholder="Describe what you did and what you learned..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Upload Evidence Files</label>
+                    <input type="file" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                    <p class="text-xs text-gray-500 mt-1">Accepted formats: PDF, DOC, DOCX, JPG, PNG</p>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Reflection</label>
+                    <textarea rows="3" required placeholder="What challenges did you face? What would you do differently?" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green"></textarea>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-light-green text-white rounded-md hover:bg-green-600">Submit Evidence</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced system for 100+ interns
+        let users = [
+            {
+                id: 1,
+                email: "admin@gwconnect.org",
+                password: "admin123",
+                name: "System Administrator",
+                type: "admin",
+                department: "IT",
+                company: "GWConnect",
+                registrationDate: new Date()
+            }
+        ];
+
+        // Course enrollment system
+        let courseEnrollments = [];
+
+        // Comprehensive course system with practical exercises
+        let courses = [
+            {
+                id: 1,
+                title: "Management Assistant Professional",
+                description: "Comprehensive training covering office management, communication, and administrative excellence with practical exercises",
+                duration: "40 hours",
+                modules: [
+                    {
+                        id: 1,
+                        title: "Office Organization & Time Management",
+                        description: "Learn essential office management and time management skills",
+                        exercise: "Create a daily schedule template, organize a filing system for 50+ documents, and implement a task prioritization system. Submit photos of your organized workspace, your schedule template, and a reflection on time management challenges.",
+                        completed: false,
+                        evidenceSubmitted: false,
+                        progress: 0
+                    },
+                    {
+                        id: 2,
+                        title: "Professional Communication",
+                        description: "Develop written and verbal communication skills",
+                        exercise: "Write 5 different types of business emails (inquiry, complaint, follow-up, meeting request, thank you), create a presentation on effective communication, and record yourself delivering a 3-minute professional introduction. Submit all documents and video.",
+                        completed: false,
+                        evidenceSubmitted: false,
+                        progress: 0
+                    },
+                    {
+                        id: 3,
+                        title: "Meeting Management",
+                        description: "Master meeting planning, coordination, and follow-up",
+                        exercise: "Plan and coordinate a mock team meeting: create agenda, send invitations, prepare meeting materials, take minutes, and send follow-up actions. Submit all meeting documents and a reflection on the process.",
+                        completed: false,
+                        evidenceSubmitted: false,
+                        progress: 0
+                    },
+                    {
+                        id: 4,
+                        title: "Document Management & Filing",
+                        description: "Learn systematic document organization and management",
+                        exercise: "Create a comprehensive filing system for different document types, develop a document retention policy, and implement a digital filing structure. Submit photos of physical filing system and screenshots of digital organization.",
+                        completed: false,
+                        evidenceSubmitted: false,
+                        progress: 0
+                    },
+                    {
+                        id: 5,
+                        title: "Customer Service Excellence",
+                        description: "Develop exceptional customer service skills",
+                        exercise: "Handle 10 different customer service scenarios (complaints, inquiries, requests), create a customer service protocol document, and develop a customer feedback system. Submit scenario responses and protocol document.",
+                        completed: false,
+                        evidenceSubmitted: false,
+                        progress: 0
+                    }
+                ],
+                createdBy: "System",
+                createdDate: new Date()
+            }
+        ];
+
+        // Evidence tracking system
+        let evidenceSubmissions = [];
+        let logbookEntries = [];
+
+        let currentUser = null;
+        let currentCourse = null;
+
+        // Modal functions
+        function showLogin() {
+            closeModal();
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        function showRegister() {
+            closeModal();
+            document.getElementById('registerModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('registerModal').classList.add('hidden');
+            document.getElementById('createCourseModal').classList.add('hidden');
+            document.getElementById('evidenceModal').classList.add('hidden');
+            document.getElementById('addLearnerModal').classList.add('hidden');
+            document.getElementById('importLearnersModal').classList.add('hidden');
+            document.getElementById('enrollLearnerModal').classList.add('hidden');
+            
+            // Reset course form when closing
+            if (!document.getElementById('createCourseModal').classList.contains('hidden') === false) {
+                resetCourseForm();
+            }
+        }
+
+        function showDemo() {
+            alert('🎥 Demo Video\n\nWatch our comprehensive platform demo to see all features in action!\n\n• Interactive course navigation\n• Real-time progress tracking\n• Evidence submission system\n• Logbook generation\n• Mobile learning experience\n\n(Demo video would play here)');
+        }
+
+        // Authentication functions
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('input[type="email"]').value;
+            const password = event.target.querySelector('input[type="password"]').value;
+
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                alert('❌ Invalid email or password. Please check your credentials and try again.');
+                return;
+            }
+
+            currentUser = user;
+            
+            // Update display names
+            document.getElementById('adminName').textContent = user.name;
+            document.getElementById('learnerName').textContent = user.name;
+
+            if (user.type === 'admin') {
+                showAdminDashboard();
+                loadAdminData();
+                alert('✅ Welcome to Admin Dashboard, ' + user.name + '!');
+            } else {
+                showLearnerDashboard();
+                loadLearnerCourse();
+                alert('✅ Welcome to Learning Dashboard, ' + user.name + '!\n\nStart your practical exercises and build your professional portfolio.');
+            }
+
+            closeModal();
+        }
+
+        function toggleRegistrationFields() {
+            const registrationType = document.getElementById('registrationType').value;
+            const companyField = document.getElementById('companyField');
+            const departmentField = document.getElementById('departmentField');
+            
+            if (registrationType === 'intern') {
+                companyField.classList.remove('hidden');
+                companyField.querySelector('input').required = true;
+                departmentField.classList.add('hidden');
+                departmentField.querySelector('select').required = false;
+            } else if (registrationType === 'admin') {
+                companyField.classList.add('hidden');
+                companyField.querySelector('input').required = false;
+                departmentField.classList.remove('hidden');
+                departmentField.querySelector('select').required = true;
+            } else {
+                companyField.classList.add('hidden');
+                departmentField.classList.add('hidden');
+                companyField.querySelector('input').required = false;
+                departmentField.querySelector('select').required = false;
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = event.target.querySelector('input[type="text"]').value;
+            const email = event.target.querySelector('input[type="email"]').value;
+            const cellNumber = event.target.querySelector('input[type="tel"]').value;
+            const idNumber = event.target.querySelectorAll('input[type="text"]')[1].value;
+            const registrationType = event.target.querySelector('#registrationType').value;
+            const password = event.target.querySelector('#password').value;
+            const confirmPassword = event.target.querySelector('#confirmPassword').value;
+            
+            let company = '';
+            let department = '';
+            
+            if (registrationType === 'intern') {
+                company = event.target.querySelector('#companyField input').value;
+            } else if (registrationType === 'admin') {
+                department = event.target.querySelector('#departmentField select').value;
+            }
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                alert('❌ Passwords do not match! Please ensure both password fields are identical.');
+                return;
+            }
+
+            // Check if email already exists
+            if (users.find(user => user.email === email)) {
+                alert('❌ Email already registered! Please use a different email or login.');
+                return;
+            }
+
+            // Add new user
+            const newUser = {
+                id: users.length + 1,
+                name: name,
+                email: email,
+                cellNumber: cellNumber,
+                idNumber: idNumber,
+                password: password,
+                type: registrationType,
+                department: department,
+                company: company,
+                registrationDate: new Date(),
+                progress: 0,
+                evidenceCount: 0,
+                status: 'Active'
+            };
+
+            users.push(newUser);
+            
+            // Initialize learner progress if intern
+            if (registrationType === 'intern') {
+                initializeLearnerProgress(newUser.id);
+            }
+
+            alert('✅ Registration successful!\n\nYou can now login with your credentials.\n\nType: ' + (registrationType === 'intern' ? 'Intern - You will access the learning dashboard' : 'Administrator - You will access the admin dashboard'));
+            
+            closeModal();
+            showLogin();
+            
+            // Pre-fill login form
+            setTimeout(() => {
+                document.querySelector('#loginModal input[type="email"]').value = email;
+            }, 100);
+        }
+
+        let originalUserType = null;
+
+        function switchToLearnerView() {
+            if (currentUser && currentUser.type === 'admin') {
+                originalUserType = 'admin';
+                showLearnerDashboard();
+                loadLearnerCourse();
+                document.getElementById('switchBackBtn').classList.remove('hidden');
+                alert('🔄 Switched to Learner View\n\nYou are now viewing the system as a learner would see it. Click "Back to Admin" to return to the admin dashboard.');
+            }
+        }
+
+        function switchBackToAdmin() {
+            if (originalUserType === 'admin') {
+                showAdminDashboard();
+                loadAdminData();
+                document.getElementById('switchBackBtn').classList.add('hidden');
+                originalUserType = null;
+                alert('🔄 Switched back to Admin Dashboard\n\nYou are now back in the admin view.');
+            }
+        }
+
+
+
+        function initializeLearnerProgress(userId) {
+            // Initialize progress tracking for new learner
+            courses[0].modules.forEach(module => {
+                logbookEntries.push({
+                    id: logbookEntries.length + 1,
+                    userId: userId,
+                    moduleId: module.id,
+                    moduleName: module.title,
+                    status: 'Not Started',
+                    startDate: null,
+                    completionDate: null,
+                    evidenceSubmitted: false,
+                    evidenceApproved: false
+                });
+            });
+        }
+
+        function logout() {
+            currentUser = null;
+            currentCourse = null;
+            showLanding();
+            alert('👋 You have been logged out successfully.');
+        }
+
+        // Dashboard functions
+        function showLanding() {
+            document.getElementById('landing').classList.remove('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('learnerDashboard').classList.add('hidden');
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            document.getElementById('learnerDashboard').classList.add('hidden');
+            showAdminSection('overview');
+        }
+
+        function showLearnerDashboard() {
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('learnerDashboard').classList.remove('hidden');
+            showLearnerSection('overview');
+        }
+
+        // Learner section management
+        function showLearnerSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.learner-section').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected section
+            document.getElementById('learner' + section.charAt(0).toUpperCase() + section.slice(1)).classList.remove('hidden');
+            
+            // Update tab styles
+            document.querySelectorAll('.learner-tab').forEach(tab => {
+                tab.classList.remove('border-light-green', 'text-light-green');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            event.target.classList.remove('border-transparent', 'text-gray-500');
+            event.target.classList.add('border-light-green', 'text-light-green');
+
+            // Load section-specific data
+            switch(section) {
+                case 'progress':
+                    loadLearnerProgressData();
+                    break;
+                case 'evidence':
+                    loadMyEvidenceList();
+                    break;
+                case 'reports':
+                    loadLearnerReportsData();
+                    break;
+            }
+        }
+
+        // Admin section management
+        function showAdminSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected section
+            document.getElementById('admin' + section.charAt(0).toUpperCase() + section.slice(1)).classList.remove('hidden');
+            
+            // Update tab styles
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('border-light-green', 'text-light-green');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            event.target.classList.remove('border-transparent', 'text-gray-500');
+            event.target.classList.add('border-light-green', 'text-light-green');
+
+            // Load section-specific data
+            switch(section) {
+                case 'learners':
+                    loadLearnersTable();
+                    break;
+                case 'courses':
+                    loadCoursesAdmin();
+                    break;
+                case 'enrollments':
+                    loadEnrollmentsSection();
+                    break;
+                case 'evidence':
+                    loadEvidenceReview();
+                    break;
+            }
+        }
+
+        // Load admin data
+        function loadAdminData() {
+            updateAdminStats();
+        }
+
+        function updateAdminStats() {
+            const interns = users.filter(u => u.type === 'intern');
+            const totalEvidence = evidenceSubmissions.length;
+            const completedModules = logbookEntries.filter(entry => entry.status === 'Completed').length;
+            const totalModules = logbookEntries.length;
+            const completionRate = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+
+            document.getElementById('activeInternsCount').textContent = interns.length;
+            document.getElementById('coursesCount').textContent = courses.length;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+            document.getElementById('evidenceCount').textContent = totalEvidence;
+        }
+
+        // Load learners table
+        function loadLearnersTable() {
+            const tbody = document.getElementById('learnersTable');
+            const interns = users.filter(u => u.type === 'intern');
+            
+            tbody.innerHTML = '';
+            
+            interns.forEach(intern => {
+                const userLogbook = logbookEntries.filter(entry => entry.userId === intern.id);
+                const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+                const totalModules = userLogbook.length;
+                const progress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+                const evidenceCount = evidenceSubmissions.filter(sub => sub.userId === intern.id).length;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <div class="h-10 w-10 rounded-full bg-light-green flex items-center justify-center text-white font-bold">
+                                    ${intern.name.charAt(0)}
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${intern.name}</div>
+                                <div class="text-sm text-gray-500">${intern.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${intern.department}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="bg-light-green h-2 rounded-full" style="width: ${progress}%"></div>
+                            </div>
+                            <span class="text-sm text-gray-900">${progress}%</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${evidenceCount} submitted</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            ${intern.status || 'Active'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="viewLearnerDetails(${intern.id})" class="text-light-green hover:text-green-600 mr-3">View</button>
+                        <button onclick="downloadLearnerLogbook(${intern.id})" class="text-blue-600 hover:text-blue-800">Download</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load courses for admin
+        function loadCoursesAdmin() {
+            const coursesList = document.getElementById('coursesList');
+            coursesList.innerHTML = '';
+
+            courses.forEach(course => {
+                const courseElement = document.createElement('div');
+                courseElement.className = 'border rounded-lg p-6 hover:shadow-md transition-shadow duration-200';
+                courseElement.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h4 class="text-xl font-semibold text-gray-900 mb-2">${course.title}</h4>
+                            <p class="text-gray-600 mb-4">${course.description}</p>
+                            <div class="flex items-center space-x-6 text-sm text-gray-500 mb-4">
+                                <span>📚 ${course.modules.length} modules</span>
+                                <span>⏱️ ${course.duration}</span>
+                                <span>👤 Created by ${course.createdBy}</span>
+                                <span>📅 ${course.createdDate.toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 ml-4">
+                            <button onclick="editCourse(${course.id})" class="text-blue-600 hover:text-blue-800 px-4 py-2 border border-blue-600 rounded text-sm">Edit</button>
+                            <button onclick="deleteCourse(${course.id})" class="text-red-600 hover:text-red-800 px-4 py-2 border border-red-600 rounded text-sm">Delete</button>
+                        </div>
+                    </div>
+                    <div class="border-t pt-4">
+                        <h5 class="font-medium text-gray-900 mb-3">Practical Modules:</h5>
+                        <div class="space-y-3">
+                            ${course.modules.map(module => `
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h6 class="font-medium text-gray-900">${module.title}</h6>
+                                            <p class="text-sm text-gray-600 mt-1">${module.description}</p>
+                                            <div class="mt-2 p-3 bg-blue-50 rounded text-sm text-blue-800">
+                                                <strong>Exercise:</strong> ${module.exercise}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                coursesList.appendChild(courseElement);
+            });
+        }
+
+        // Load evidence review
+        function loadEvidenceReview() {
+            const evidenceList = document.getElementById('evidenceReviewList');
+            evidenceList.innerHTML = '';
+
+            if (evidenceSubmissions.length === 0) {
+                evidenceList.innerHTML = '<p class="text-gray-500 text-center py-8">No evidence submissions yet.</p>';
+                return;
+            }
+
+            evidenceSubmissions.forEach(submission => {
+                const user = users.find(u => u.id === submission.userId);
+                const evidenceElement = document.createElement('div');
+                evidenceElement.className = 'border rounded-lg p-6 mb-4';
+                evidenceElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900">${submission.moduleName}</h4>
+                            <p class="text-sm text-gray-600">Submitted by: ${user ? user.name : 'Unknown'} • ${submission.submissionDate.toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="approveEvidence(${submission.id})" class="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600">Approve</button>
+                            <button onclick="rejectEvidence(${submission.id})" class="bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600">Reject</button>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <h5 class="font-medium text-gray-900">Description:</h5>
+                            <p class="text-gray-700">${submission.description}</p>
+                        </div>
+                        <div>
+                            <h5 class="font-medium text-gray-900">Reflection:</h5>
+                            <p class="text-gray-700">${submission.reflection}</p>
+                        </div>
+                        <div>
+                            <h5 class="font-medium text-gray-900">Files:</h5>
+                            <div class="flex space-x-2">
+                                ${submission.files.map(file => `
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        📎 ${file}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                evidenceList.appendChild(evidenceElement);
+            });
+        }
+
+        // Load learner course
+        function loadLearnerCourse() {
+            const modulesContainer = document.getElementById('courseModules');
+            modulesContainer.innerHTML = '';
+            
+            // Get learner's enrolled courses
+            const userEnrollments = courseEnrollments.filter(enrollment => 
+                enrollment.userId === currentUser.id && enrollment.status === 'active'
+            );
+            
+            if (userEnrollments.length === 0) {
+                modulesContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">📚</div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No Courses Enrolled</h3>
+                        <p class="text-gray-600 mb-6">You haven't been enrolled in any courses yet. Please contact your administrator to get started.</p>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+                            <p class="text-blue-800 text-sm">
+                                <strong>Need help?</strong><br>
+                                Contact support at +27 12 001 4230 or email support@gwconnect.org
+                            </p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Display all enrolled courses
+            userEnrollments.forEach(enrollment => {
+                const course = courses.find(c => c.id === enrollment.courseId);
+                if (!course) return;
+                
+                const courseSection = document.createElement('div');
+                courseSection.className = 'mb-8 border rounded-lg p-6 bg-white';
+                courseSection.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-dark-green">${course.title}</h3>
+                            <p class="text-gray-600">${course.description}</p>
+                            <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                                <span>📚 ${course.modules.length} modules</span>
+                                <span>⏱️ ${course.duration}</span>
+                                <span>📅 Started: ${enrollment.startDate.toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-gold" id="courseProgress_${course.id}">0%</div>
+                            <div class="text-sm text-gray-600">Progress</div>
+                        </div>
+                    </div>
+                    <div id="courseModules_${course.id}" class="space-y-4">
+                        <!-- Modules will be loaded here -->
+                    </div>
+                `;
+                modulesContainer.appendChild(courseSection);
+                
+                // Load modules for this course
+                loadCourseModules(course, enrollment);
+            });
+            
+            updateLearnerProgress();
+        }
+        
+        function loadCourseModules(course, enrollment) {
+            const courseModulesContainer = document.getElementById(`courseModules_${course.id}`);
+            const userLogbook = logbookEntries.filter(entry => 
+                entry.userId === currentUser.id && 
+                course.modules.some(m => m.id === entry.moduleId)
+            );
+            
+            course.modules.forEach((module, index) => {
+                const userProgress = userLogbook.find(entry => entry.moduleId === module.id);
+                const isCompleted = userProgress && userProgress.status === 'Completed';
+                const hasEvidence = userProgress && userProgress.evidenceSubmitted;
+                const canStart = index === 0 || (userLogbook[index - 1] && userLogbook[index - 1].status === 'Completed');
+                
+                const moduleElement = document.createElement('div');
+                moduleElement.className = `border rounded-lg p-6 ${isCompleted ? 'bg-green-50 border-green-200' : hasEvidence ? 'bg-blue-50 border-blue-200' : canStart ? 'bg-white' : 'bg-gray-50 opacity-75'}`;
+                
+                moduleElement.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-dark-green">${module.title}</h3>
+                        <div class="flex items-center space-x-2">
+                            ${isCompleted ? '<span class="text-green-600 text-xl">✅</span>' : hasEvidence ? '<span class="text-blue-600 text-xl">📋</span>' : canStart ? '<span class="text-gray-400 text-xl">📝</span>' : '<span class="text-gray-400 text-xl">🔒</span>'}
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">${module.description}</p>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                        <h4 class="font-semibold text-blue-900 mb-2">Practical Exercise:</h4>
+                        <p class="text-blue-800 text-sm">${module.exercise}</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-600">
+                            Status: <span class="font-medium">${isCompleted ? 'Completed' : hasEvidence ? 'Evidence Submitted' : canStart ? 'Ready to Start' : 'Locked'}</span>
+                        </div>
+                        <div class="space-x-2">
+                            ${canStart && !isCompleted ? `<button onclick="startModule(${module.id}, ${course.id})" class="bg-light-green text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors duration-200">Start Exercise</button>` : ''}
+                            ${canStart && !hasEvidence ? `<button onclick="submitEvidence(${module.id}, ${course.id})" class="bg-gold text-dark-green px-4 py-2 rounded-md hover:bg-yellow-400 transition-colors duration-200">Submit Evidence</button>` : ''}
+                            ${hasEvidence ? '<span class="text-sm text-blue-600 font-medium">Evidence Under Review</span>' : ''}
+                        </div>
+                    </div>
+                `;
+                
+                courseModulesContainer.appendChild(moduleElement);
+            });
+            
+            // Update course-specific progress
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const totalModules = course.modules.length;
+            const courseProgress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+            
+            const progressElement = document.getElementById(`courseProgress_${course.id}`);
+            if (progressElement) {
+                progressElement.textContent = courseProgress + '%';
+            }
+        }
+
+        function updateLearnerProgress() {
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const totalModules = userLogbook.length;
+            const progress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+            
+            document.getElementById('learnerProgress').textContent = progress + '%';
+        }
+
+        // Course management functions
+        function showCreateCourse() {
+            document.getElementById('createCourseModal').classList.remove('hidden');
+        }
+
+        function addModule() {
+            const modulesList = document.getElementById('modulesList');
+            const newModule = document.createElement('div');
+            newModule.className = 'module-item border rounded-lg p-4';
+            newModule.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <input type="text" placeholder="Module Title" class="module-title px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                    <button type="button" onclick="removeModule(this)" class="text-red-500 hover:text-red-700 px-4 py-2 border border-red-300 rounded-md">Remove Module</button>
+                </div>
+                <textarea placeholder="Module Description" class="module-description w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green mb-4" rows="2"></textarea>
+                <textarea placeholder="Practical Exercise Instructions (What should the intern do and submit as evidence?)" class="module-exercise w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green" rows="3"></textarea>
+            `;
+            modulesList.appendChild(newModule);
+        }
+
+        function removeModule(button) {
+            button.closest('.module-item').remove();
+        }
+
+        function handleCreateCourse(event) {
+            event.preventDefault();
+            
+            // Check if we're editing an existing course
+            const editingCourseId = event.target.getAttribute('data-editing-course-id');
+            if (editingCourseId) {
+                handleEditCourse(event, parseInt(editingCourseId));
+                return;
+            }
+            
+            const title = event.target.querySelector('input[type="text"]').value;
+            const duration = event.target.querySelectorAll('input[type="text"]')[1].value;
+            const description = event.target.querySelector('textarea').value;
+            
+            // Collect modules
+            const moduleItems = event.target.querySelectorAll('.module-item');
+            const modules = [];
+            
+            moduleItems.forEach((item, index) => {
+                const moduleTitle = item.querySelector('.module-title').value;
+                const moduleDescription = item.querySelector('.module-description').value;
+                const moduleExercise = item.querySelector('.module-exercise').value;
+                
+                if (moduleTitle.trim()) {
+                    modules.push({
+                        id: index + 1,
+                        title: moduleTitle,
+                        description: moduleDescription,
+                        exercise: moduleExercise,
+                        completed: false,
+                        evidenceSubmitted: false,
+                        progress: 0
+                    });
+                }
+            });
+
+            // Create new course
+            const newCourse = {
+                id: courses.length + 1,
+                title: title,
+                description: description,
+                duration: duration,
+                modules: modules,
+                createdBy: currentUser.name,
+                createdDate: new Date()
+            };
+
+            courses.push(newCourse);
+            
+            // Initialize progress for all existing interns
+            const interns = users.filter(u => u.type === 'intern');
+            interns.forEach(intern => {
+                modules.forEach(module => {
+                    logbookEntries.push({
+                        id: logbookEntries.length + 1,
+                        userId: intern.id,
+                        moduleId: module.id,
+                        moduleName: module.title,
+                        status: 'Not Started',
+                        startDate: null,
+                        completionDate: null,
+                        evidenceSubmitted: false,
+                        evidenceApproved: false
+                    });
+                });
+            });
+            
+            loadCoursesAdmin();
+            updateAdminStats();
+            closeModal();
+            resetCourseForm();
+            
+            alert('✅ Course created successfully!\n\nCourse: ' + title + '\nModules: ' + modules.length + '\n\nThe course includes practical exercises that will help interns build real-world skills and create evidence for their logbooks.');
+        }
+
+        // Evidence submission functions
+        function startModule(moduleId) {
+            const userLogbook = logbookEntries.find(entry => entry.userId === currentUser.id && entry.moduleId === moduleId);
+            if (userLogbook) {
+                userLogbook.status = 'In Progress';
+                userLogbook.startDate = new Date();
+            }
+            
+            alert('📚 Module Started!\n\nYou can now begin working on the practical exercise. Remember to document your work as you go - you\'ll need to submit evidence when you complete the exercise.');
+            loadLearnerCourse();
+        }
+
+        function submitEvidence(moduleId) {
+            const module = currentCourse.modules.find(m => m.id === moduleId);
+            if (!module) return;
+
+            document.getElementById('evidenceModuleId').value = moduleId;
+            document.getElementById('evidenceModuleName').value = module.title;
+            document.getElementById('evidenceInstructions').textContent = module.exercise;
+            
+            document.getElementById('evidenceModal').classList.remove('hidden');
+        }
+
+        function handleEvidenceSubmission(event) {
+            event.preventDefault();
+            
+            const moduleId = parseInt(document.getElementById('evidenceModuleId').value);
+            const description = event.target.querySelector('textarea').value;
+            const reflection = event.target.querySelectorAll('textarea')[1].value;
+            const fileInput = event.target.querySelector('input[type="file"]');
+            
+            // Simulate file upload
+            const files = [];
+            for (let i = 0; i < fileInput.files.length; i++) {
+                files.push(fileInput.files[i].name);
+            }
+            
+            // Create evidence submission
+            const submission = {
+                id: evidenceSubmissions.length + 1,
+                userId: currentUser.id,
+                moduleId: moduleId,
+                moduleName: currentCourse.modules.find(m => m.id === moduleId).title,
+                description: description,
+                reflection: reflection,
+                files: files,
+                submissionDate: new Date(),
+                status: 'Pending Review',
+                approved: false
+            };
+            
+            evidenceSubmissions.push(submission);
+            
+            // Update logbook entry
+            const userLogbook = logbookEntries.find(entry => entry.userId === currentUser.id && entry.moduleId === moduleId);
+            if (userLogbook) {
+                userLogbook.evidenceSubmitted = true;
+                userLogbook.status = 'Evidence Submitted';
+            }
+            
+            closeModal();
+            loadLearnerCourse();
+            updateAdminStats();
+            
+            alert('✅ Evidence Submitted Successfully!\n\nYour evidence has been submitted for review. You will be notified once it has been approved.\n\nFiles uploaded: ' + files.length);
+        }
+
+        // Evidence approval functions
+        function approveEvidence(submissionId) {
+            const submission = evidenceSubmissions.find(s => s.id === submissionId);
+            if (!submission) return;
+            
+            submission.approved = true;
+            submission.status = 'Approved';
+            
+            // Update logbook entry
+            const userLogbook = logbookEntries.find(entry => entry.userId === submission.userId && entry.moduleId === submission.moduleId);
+            if (userLogbook) {
+                userLogbook.status = 'Completed';
+                userLogbook.completionDate = new Date();
+                userLogbook.evidenceApproved = true;
+            }
+            
+            loadEvidenceReview();
+            updateAdminStats();
+            
+            alert('✅ Evidence Approved!\n\nThe learner has been notified and can proceed to the next module.');
+        }
+
+        function rejectEvidence(submissionId) {
+            const submission = evidenceSubmissions.find(s => s.id === submissionId);
+            if (!submission) return;
+            
+            const feedback = prompt('Please provide feedback for the learner:');
+            if (!feedback) return;
+            
+            submission.approved = false;
+            submission.status = 'Rejected';
+            submission.feedback = feedback;
+            
+            // Update logbook entry
+            const userLogbook = logbookEntries.find(entry => entry.userId === submission.userId && entry.moduleId === submission.moduleId);
+            if (userLogbook) {
+                userLogbook.status = 'Needs Revision';
+                userLogbook.evidenceSubmitted = false;
+            }
+            
+            loadEvidenceReview();
+            
+            alert('📝 Evidence Rejected\n\nFeedback has been sent to the learner. They can resubmit their evidence after making improvements.');
+        }
+
+        // Download functions
+        function downloadMyLogbook() {
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === currentUser.id);
+            
+            let logbookContent = `
+LOGBOOK - MANAGEMENT ASSISTANT PROFESSIONAL COURSE
+Student: ${currentUser.name}
+Email: ${currentUser.email}
+Department: ${currentUser.department}
+Company: ${currentUser.company}
+Generated: ${new Date().toLocaleDateString()}
+
+=================================================
+
+COURSE PROGRESS SUMMARY:
+`;
+            
+            userLogbook.forEach(entry => {
+                const evidence = userEvidence.find(ev => ev.moduleId === entry.moduleId);
+                logbookContent += `
+Module: ${entry.moduleName}
+Status: ${entry.status}
+Start Date: ${entry.startDate ? entry.startDate.toLocaleDateString() : 'Not started'}
+Completion Date: ${entry.completionDate ? entry.completionDate.toLocaleDateString() : 'Not completed'}
+Evidence Submitted: ${entry.evidenceSubmitted ? 'Yes' : 'No'}
+Evidence Approved: ${entry.evidenceApproved ? 'Yes' : 'No'}
+
+${evidence ? `
+Evidence Description:
+${evidence.description}
+
+Reflection:
+${evidence.reflection}
+
+Files Submitted: ${evidence.files.join(', ')}
+` : ''}
+-------------------------------------------------
+`;
+            });
+            
+            // Create and download file
+            const blob = new Blob([logbookContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentUser.name.replace(/\s+/g, '_')}_Logbook_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📥 Logbook Downloaded!\n\nYour complete learning logbook has been downloaded. This document contains all your progress, evidence submissions, and reflections.');
+        }
+
+        function downloadLearnerLogbook(userId) {
+            const user = users.find(u => u.id === userId);
+            const userLogbook = logbookEntries.filter(entry => entry.userId === userId);
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === userId);
+            
+            let logbookContent = `
+LOGBOOK - MANAGEMENT ASSISTANT PROFESSIONAL COURSE
+Student: ${user.name}
+Email: ${user.email}
+Department: ${user.department}
+Company: ${user.company}
+Generated: ${new Date().toLocaleDateString()}
+
+=================================================
+
+COURSE PROGRESS SUMMARY:
+`;
+            
+            userLogbook.forEach(entry => {
+                const evidence = userEvidence.find(ev => ev.moduleId === entry.moduleId);
+                logbookContent += `
+Module: ${entry.moduleName}
+Status: ${entry.status}
+Start Date: ${entry.startDate ? entry.startDate.toLocaleDateString() : 'Not started'}
+Completion Date: ${entry.completionDate ? entry.completionDate.toLocaleDateString() : 'Not completed'}
+Evidence Submitted: ${entry.evidenceSubmitted ? 'Yes' : 'No'}
+Evidence Approved: ${entry.evidenceApproved ? 'Yes' : 'No'}
+
+${evidence ? `
+Evidence Description:
+${evidence.description}
+
+Reflection:
+${evidence.reflection}
+
+Files Submitted: ${evidence.files.join(', ')}
+` : ''}
+-------------------------------------------------
+`;
+            });
+            
+            // Create and download file
+            const blob = new Blob([logbookContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${user.name.replace(/\s+/g, '_')}_Logbook_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📥 Learner Logbook Downloaded!\n\nComplete learning logbook for ' + user.name + ' has been downloaded.');
+        }
+
+        function downloadAllLogbooks() {
+            const interns = users.filter(u => u.type === 'intern');
+            
+            if (interns.length === 0) {
+                alert('No intern logbooks available for download.');
+                return;
+            }
+            
+            let allLogbooks = `
+COMPLETE LOGBOOK REPORT - MANAGEMENT ASSISTANT PROFESSIONAL COURSE
+Generated: ${new Date().toLocaleDateString()}
+Total Interns: ${interns.length}
+
+=================================================
+`;
+            
+            interns.forEach(intern => {
+                const userLogbook = logbookEntries.filter(entry => entry.userId === intern.id);
+                const userEvidence = evidenceSubmissions.filter(sub => sub.userId === intern.id);
+                const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+                const progress = userLogbook.length > 0 ? Math.round((completedModules / userLogbook.length) * 100) : 0;
+                
+                allLogbooks += `
+STUDENT: ${intern.name}
+Email: ${intern.email}
+Department: ${intern.department}
+Company: ${intern.company}
+Overall Progress: ${progress}%
+Evidence Submissions: ${userEvidence.length}
+
+MODULE DETAILS:
+`;
+                
+                userLogbook.forEach(entry => {
+                    const evidence = userEvidence.find(ev => ev.moduleId === entry.moduleId);
+                    allLogbooks += `
+  • ${entry.moduleName}
+    Status: ${entry.status}
+    Evidence: ${entry.evidenceSubmitted ? 'Submitted' : 'Not submitted'}
+    ${evidence ? `Description: ${evidence.description.substring(0, 100)}...` : ''}
+`;
+                });
+                
+                allLogbooks += '\n' + '='.repeat(50) + '\n';
+            });
+            
+            // Create and download file
+            const blob = new Blob([allLogbooks], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `All_Logbooks_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📥 All Logbooks Downloaded!\n\nComplete report with all intern logbooks has been downloaded.\n\nInterns included: ' + interns.length);
+        }
+
+        // Report generation functions
+        function generateProgressReport() {
+            alert('📊 Progress Report Generated!\n\nThis would generate a comprehensive progress report showing:\n\n• Individual learner progress\n• Module completion rates\n• Time to completion analysis\n• Performance trends\n\n(Report would be generated and downloaded here)');
+        }
+
+        function generateCompletionReport() {
+            alert('✅ Completion Report Generated!\n\nThis would generate a completion report showing:\n\n• Course completion rates\n• Module-wise completion statistics\n• Dropout analysis\n• Success metrics\n\n(Report would be generated and downloaded here)');
+        }
+
+        function generateEvidenceReport() {
+            alert('📋 Evidence Report Generated!\n\nThis would generate an evidence report showing:\n\n• Evidence submission rates\n• Quality assessment scores\n• Approval/rejection ratios\n• Common feedback themes\n\n(Report would be generated and downloaded here)');
+        }
+
+        function generateReports() {
+            alert('📊 Report Generation\n\nSelect from available reports:\n\n• Progress Reports\n• Completion Reports\n• Evidence Reports\n• Custom Reports\n\n(Report selection interface would open here)');
+        }
+
+        // Course editing functions
+        function editCourse(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            // Populate edit form with existing course data
+            document.getElementById('createCourseModal').classList.remove('hidden');
+            
+            // Change modal title
+            document.querySelector('#createCourseModal h2').textContent = 'Edit Course';
+            
+            // Fill form with existing data
+            const form = document.querySelector('#createCourseModal form');
+            form.querySelector('input[type="text"]').value = course.title;
+            form.querySelectorAll('input[type="text"]')[1].value = course.duration;
+            form.querySelector('textarea').value = course.description;
+            
+            // Clear existing modules and populate with course modules
+            const modulesList = document.getElementById('modulesList');
+            modulesList.innerHTML = '';
+            
+            course.modules.forEach(module => {
+                const moduleElement = document.createElement('div');
+                moduleElement.className = 'module-item border rounded-lg p-4';
+                moduleElement.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" placeholder="Module Title" class="module-title px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green" value="${module.title}">
+                        <button type="button" onclick="removeModule(this)" class="text-red-500 hover:text-red-700 px-4 py-2 border border-red-300 rounded-md">Remove Module</button>
+                    </div>
+                    <textarea placeholder="Module Description" class="module-description w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green mb-4" rows="2">${module.description}</textarea>
+                    <textarea placeholder="Practical Exercise Instructions (What should the intern do and submit as evidence?)" class="module-exercise w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green" rows="3">${module.exercise}</textarea>
+                `;
+                modulesList.appendChild(moduleElement);
+            });
+            
+            // Store course ID for editing
+            form.setAttribute('data-editing-course-id', courseId);
+            
+            // Change button text
+            form.querySelector('button[type="submit"]').textContent = 'Update Course';
+        }
+
+        function handleEditCourse(event, courseId) {
+            event.preventDefault();
+            
+            const title = event.target.querySelector('input[type="text"]').value;
+            const duration = event.target.querySelectorAll('input[type="text"]')[1].value;
+            const description = event.target.querySelector('textarea').value;
+            
+            // Collect modules
+            const moduleItems = event.target.querySelectorAll('.module-item');
+            const modules = [];
+            
+            moduleItems.forEach((item, index) => {
+                const moduleTitle = item.querySelector('.module-title').value;
+                const moduleDescription = item.querySelector('.module-description').value;
+                const moduleExercise = item.querySelector('.module-exercise').value;
+                
+                if (moduleTitle.trim()) {
+                    modules.push({
+                        id: index + 1,
+                        title: moduleTitle,
+                        description: moduleDescription,
+                        exercise: moduleExercise,
+                        completed: false,
+                        evidenceSubmitted: false,
+                        progress: 0
+                    });
+                }
+            });
+
+            // Update existing course
+            const courseIndex = courses.findIndex(c => c.id === courseId);
+            if (courseIndex !== -1) {
+                courses[courseIndex] = {
+                    ...courses[courseIndex],
+                    title: title,
+                    description: description,
+                    duration: duration,
+                    modules: modules,
+                    lastModified: new Date(),
+                    modifiedBy: currentUser.name
+                };
+                
+                // Update all learner progress for this course
+                updateLearnerProgressForCourse(courseId, modules);
+            }
+
+            loadCoursesAdmin();
+            closeModal();
+            resetCourseForm();
+            
+            alert('✅ Course updated successfully!\n\nCourse: ' + title + '\nModules: ' + modules.length + '\n\nAll learner progress has been synchronized with the updated course structure.');
+        }
+
+        function updateLearnerProgressForCourse(courseId, newModules) {
+            // Update logbook entries for all learners when course is modified
+            const interns = users.filter(u => u.type === 'intern');
+            
+            interns.forEach(intern => {
+                // Remove old logbook entries for this course
+                logbookEntries = logbookEntries.filter(entry => 
+                    !(entry.userId === intern.id && courses.find(c => c.id === courseId && c.modules.some(m => m.id === entry.moduleId)))
+                );
+                
+                // Add new logbook entries based on updated modules
+                newModules.forEach(module => {
+                    logbookEntries.push({
+                        id: logbookEntries.length + 1,
+                        userId: intern.id,
+                        moduleId: module.id,
+                        moduleName: module.title,
+                        status: 'Not Started',
+                        startDate: null,
+                        completionDate: null,
+                        evidenceSubmitted: false,
+                        evidenceApproved: false
+                    });
+                });
+            });
+        }
+
+        function deleteCourse(courseId) {
+            if (!confirm('⚠️ Are you sure you want to delete this course?\n\nThis will remove all associated learner progress and evidence submissions. This action cannot be undone.')) {
+                return;
+            }
+            
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            // Remove course
+            courses = courses.filter(c => c.id !== courseId);
+            
+            // Remove associated logbook entries
+            logbookEntries = logbookEntries.filter(entry => 
+                !course.modules.some(m => m.id === entry.moduleId)
+            );
+            
+            // Remove associated evidence submissions
+            evidenceSubmissions = evidenceSubmissions.filter(sub => 
+                !course.modules.some(m => m.id === sub.moduleId)
+            );
+            
+            loadCoursesAdmin();
+            updateAdminStats();
+            
+            alert('🗑️ Course deleted successfully!\n\nCourse "' + course.title + '" and all associated data have been removed.');
+        }
+
+        function resetCourseForm() {
+            const form = document.querySelector('#createCourseModal form');
+            
+            // Reset form
+            form.reset();
+            form.removeAttribute('data-editing-course-id');
+            form.onsubmit = handleCreateCourse;
+            
+            // Reset modal title and button
+            document.querySelector('#createCourseModal h2').textContent = 'Create New Course';
+            form.querySelector('button[type="submit"]').textContent = 'Create Course';
+            
+            // Reset modules list
+            document.getElementById('modulesList').innerHTML = `
+                <div class="module-item border rounded-lg p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" placeholder="Module Title" class="module-title px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                        <button type="button" onclick="removeModule(this)" class="text-red-500 hover:text-red-700 px-4 py-2 border border-red-300 rounded-md">Remove Module</button>
+                    </div>
+                    <textarea placeholder="Module Description" class="module-description w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green mb-4" rows="2"></textarea>
+                    <textarea placeholder="Practical Exercise Instructions (What should the intern do and submit as evidence?)" class="module-exercise w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green" rows="3"></textarea>
+                </div>
+            `;
+        }
+
+        // Additional admin functions
+        function viewLearnerDetails(userId) {
+            const user = users.find(u => u.id === userId);
+            const userLogbook = logbookEntries.filter(entry => entry.userId === userId);
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === userId);
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const progress = userLogbook.length > 0 ? Math.round((completedModules / userLogbook.length) * 100) : 0;
+            
+            alert(`👤 Learner Details\n\nName: ${user.name}\nEmail: ${user.email}\nDepartment: ${user.department}\nCompany: ${user.company}\nRegistration Date: ${user.registrationDate.toLocaleDateString()}\n\nProgress: ${progress}%\nCompleted Modules: ${completedModules}/${userLogbook.length}\nEvidence Submissions: ${userEvidence.length}\nStatus: ${user.status || 'Active'}`);
+        }
+
+        function exportLearners() {
+            const interns = users.filter(u => u.type === 'intern');
+            let csvContent = 'Name,Email,Department,Company,Registration Date,Progress,Evidence Count,Status\n';
+            
+            interns.forEach(intern => {
+                const userLogbook = logbookEntries.filter(entry => entry.userId === intern.id);
+                const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+                const progress = userLogbook.length > 0 ? Math.round((completedModules / userLogbook.length) * 100) : 0;
+                const evidenceCount = evidenceSubmissions.filter(sub => sub.userId === intern.id).length;
+                
+                csvContent += `"${intern.name}","${intern.email}","${intern.department}","${intern.company}","${intern.registrationDate.toLocaleDateString()}","${progress}%","${evidenceCount}","${intern.status || 'Active'}"\n`;
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Learners_Export_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📊 Learners Exported!\n\nLearner data has been exported to CSV format.');
+        }
+
+        // Learner management functions
+        function showAddLearner() {
+            document.getElementById('addLearnerModal').classList.remove('hidden');
+        }
+
+        function showImportLearners() {
+            document.getElementById('importLearnersModal').classList.remove('hidden');
+        }
+
+        function handleAddLearner(event) {
+            event.preventDefault();
+            
+            const name = event.target.querySelector('input[type="text"]').value;
+            const email = event.target.querySelector('input[type="email"]').value;
+            const idNumber = event.target.querySelectorAll('input[type="text"]')[1].value;
+            const department = event.target.querySelector('select').value;
+            const company = event.target.querySelectorAll('input[type="text"]')[2].value;
+            const password = event.target.querySelector('input[type="password"]').value;
+
+            // Check if email already exists
+            if (users.find(user => user.email === email)) {
+                alert('❌ Email already exists! Please use a different email address.');
+                return;
+            }
+
+            // Add new learner
+            const newLearner = {
+                id: users.length + 1,
+                name: name,
+                email: email,
+                idNumber: idNumber,
+                password: password,
+                type: 'intern',
+                department: department,
+                company: company,
+                registrationDate: new Date(),
+                progress: 0,
+                evidenceCount: 0,
+                status: 'Active'
+            };
+
+            users.push(newLearner);
+            initializeLearnerProgress(newLearner.id);
+            
+            closeModal();
+            loadLearnersTable();
+            updateAdminStats();
+            
+            alert('✅ Learner Added Successfully!\n\nName: ' + name + '\nEmail: ' + email + '\nDepartment: ' + department + '\n\nThe learner can now login and start their courses.');
+        }
+
+        function downloadImportTemplate() {
+            const templateData = `Full Name,Email,ID Number,Department,Company,Temporary Password
+John Smith,john.smith@company.com,1234567890123,Administration,ABC Company,TempPass123
+Jane Doe,jane.doe@company.com,9876543210987,Human Resources,XYZ Corp,TempPass456
+Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`;
+
+            const blob = new Blob([templateData], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Learners_Import_Template.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📥 Import Template Downloaded!\n\nThe template includes:\n• Sample data format\n• Required columns\n• Department options\n\nFill in your learner data and upload the file to import multiple learners at once.');
+        }
+
+        let importPreviewData = [];
+
+        function handleImportLearners(event) {
+            event.preventDefault();
+            
+            const fileInput = event.target.querySelector('input[type="file"]');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('❌ Please select a file to import.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                parseImportFile(text);
+            };
+            reader.readAsText(file);
+        }
+
+        function parseImportFile(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            
+            // Validate headers
+            const requiredHeaders = ['Full Name', 'Email', 'ID Number', 'Department', 'Company', 'Temporary Password'];
+            const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+            
+            if (missingHeaders.length > 0) {
+                alert('❌ Invalid file format!\n\nMissing required columns:\n' + missingHeaders.join(', ') + '\n\nPlease download the template and use the correct format.');
+                return;
+            }
+
+            importPreviewData = [];
+            const previewBody = document.getElementById('importPreviewBody');
+            previewBody.innerHTML = '';
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+                
+                if (values.length >= 6) {
+                    const learnerData = {
+                        name: values[0],
+                        email: values[1],
+                        idNumber: values[2],
+                        department: values[3],
+                        company: values[4],
+                        password: values[5]
+                    };
+
+                    // Check for duplicates
+                    const isDuplicate = users.find(u => u.email === learnerData.email);
+                    const status = isDuplicate ? 'Duplicate' : 'Ready';
+                    const statusClass = isDuplicate ? 'text-red-600' : 'text-green-600';
+
+                    importPreviewData.push({...learnerData, status: status, isDuplicate: isDuplicate});
+
+                    // Add preview row
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-4 py-2 text-sm text-gray-900">${learnerData.name}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">${learnerData.email}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">${learnerData.department}</td>
+                        <td class="px-4 py-2 text-sm ${statusClass}">${status}</td>
+                    `;
+                    previewBody.appendChild(row);
+                }
+            }
+
+            document.getElementById('importPreview').classList.remove('hidden');
+            
+            const validCount = importPreviewData.filter(d => !d.isDuplicate).length;
+            const duplicateCount = importPreviewData.filter(d => d.isDuplicate).length;
+            
+            if (duplicateCount > 0) {
+                alert(`⚠️ Import Preview Ready\n\nValid learners: ${validCount}\nDuplicates found: ${duplicateCount}\n\nDuplicate entries will be skipped during import.`);
+            } else {
+                alert(`✅ Import Preview Ready\n\nAll ${validCount} learners are valid and ready to import.`);
+            }
+        }
+
+        function confirmImportLearners() {
+            const validLearners = importPreviewData.filter(d => !d.isDuplicate);
+            
+            if (validLearners.length === 0) {
+                alert('❌ No valid learners to import.');
+                return;
+            }
+
+            let importedCount = 0;
+            
+            validLearners.forEach(learnerData => {
+                const newLearner = {
+                    id: users.length + 1,
+                    name: learnerData.name,
+                    email: learnerData.email,
+                    idNumber: learnerData.idNumber,
+                    password: learnerData.password,
+                    type: 'intern',
+                    department: learnerData.department,
+                    company: learnerData.company,
+                    registrationDate: new Date(),
+                    progress: 0,
+                    evidenceCount: 0,
+                    status: 'Active'
+                };
+
+                users.push(newLearner);
+                initializeLearnerProgress(newLearner.id);
+                importedCount++;
+            });
+
+            closeModal();
+            loadLearnersTable();
+            updateAdminStats();
+            
+            alert(`✅ Import Completed Successfully!\n\nImported: ${importedCount} learners\nSkipped duplicates: ${importPreviewData.length - importedCount}\n\nAll imported learners can now login and start their courses.`);
+        }
+
+        // Override the import form submission to use confirmation
+        document.addEventListener('DOMContentLoaded', function() {
+            const importForm = document.querySelector('#importLearnersModal form');
+            if (importForm) {
+                importForm.onsubmit = function(event) {
+                    event.preventDefault();
+                    
+                    if (importPreviewData.length === 0) {
+                        handleImportLearners(event);
+                    } else {
+                        confirmImportLearners();
+                    }
+                };
+            }
+        });
+
+        // Learner progress and data functions
+        function loadLearnerProgressData() {
+            if (!currentUser) return;
+            
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === currentUser.id);
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const totalModules = userLogbook.length;
+            const daysActive = Math.floor((new Date() - currentUser.registrationDate) / (1000 * 60 * 60 * 24));
+            const progress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+
+            // Update progress stats
+            document.getElementById('completedModulesCount').textContent = completedModules + '/' + totalModules;
+            document.getElementById('evidenceSubmittedCount').textContent = userEvidence.length;
+            document.getElementById('daysActiveCount').textContent = daysActive;
+            document.getElementById('overallProgressPercent').textContent = progress + '%';
+
+            // Load progress timeline
+            loadProgressTimeline();
+            
+            // Load module progress chart
+            loadModuleProgressChart();
+        }
+
+        function loadProgressTimeline() {
+            const timeline = document.getElementById('progressTimeline');
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === currentUser.id);
+            
+            timeline.innerHTML = '';
+            
+            // Combine and sort timeline events
+            const timelineEvents = [];
+            
+            userLogbook.forEach(entry => {
+                if (entry.startDate) {
+                    timelineEvents.push({
+                        date: entry.startDate,
+                        type: 'started',
+                        module: entry.moduleName,
+                        icon: '🚀',
+                        color: 'blue'
+                    });
+                }
+                if (entry.completionDate) {
+                    timelineEvents.push({
+                        date: entry.completionDate,
+                        type: 'completed',
+                        module: entry.moduleName,
+                        icon: '✅',
+                        color: 'green'
+                    });
+                }
+            });
+            
+            userEvidence.forEach(evidence => {
+                timelineEvents.push({
+                    date: evidence.submissionDate,
+                    type: 'evidence',
+                    module: evidence.moduleName,
+                    icon: '📋',
+                    color: 'purple'
+                });
+            });
+            
+            // Sort by date (newest first)
+            timelineEvents.sort((a, b) => b.date - a.date);
+            
+            if (timelineEvents.length === 0) {
+                timeline.innerHTML = '<p class="text-gray-500 text-center py-4">No activity yet. Start your first module to see your progress timeline!</p>';
+                return;
+            }
+            
+            timelineEvents.slice(0, 10).forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'flex items-center space-x-4 p-3 bg-gray-50 rounded-lg';
+                eventElement.innerHTML = `
+                    <div class="flex-shrink-0">
+                        <span class="text-xl">${event.icon}</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">
+                            ${event.type === 'started' ? 'Started' : event.type === 'completed' ? 'Completed' : 'Submitted evidence for'} 
+                            ${event.module}
+                        </p>
+                        <p class="text-xs text-gray-500">${event.date.toLocaleDateString()} at ${event.date.toLocaleTimeString()}</p>
+                    </div>
+                `;
+                timeline.appendChild(eventElement);
+            });
+        }
+
+        function loadModuleProgressChart() {
+            const chart = document.getElementById('moduleProgressChart');
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            
+            chart.innerHTML = '';
+            
+            userLogbook.forEach(entry => {
+                const progress = entry.status === 'Completed' ? 100 : 
+                                entry.status === 'Evidence Submitted' ? 80 : 
+                                entry.status === 'In Progress' ? 50 : 0;
+                
+                const statusColor = entry.status === 'Completed' ? 'bg-green-500' : 
+                                  entry.status === 'Evidence Submitted' ? 'bg-blue-500' : 
+                                  entry.status === 'In Progress' ? 'bg-yellow-500' : 'bg-gray-300';
+                
+                const moduleElement = document.createElement('div');
+                moduleElement.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg';
+                moduleElement.innerHTML = `
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-900">${entry.moduleName}</h4>
+                        <p class="text-sm text-gray-600">${entry.status}</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-32 bg-gray-200 rounded-full h-2">
+                            <div class="${statusColor} h-2 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900 w-12">${progress}%</span>
+                    </div>
+                `;
+                chart.appendChild(moduleElement);
+            });
+        }
+
+        function loadMyEvidenceList() {
+            if (!currentUser) return;
+            
+            const evidenceList = document.getElementById('myEvidenceList');
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === currentUser.id);
+            
+            evidenceList.innerHTML = '';
+            
+            if (userEvidence.length === 0) {
+                evidenceList.innerHTML = '<p class="text-gray-500 text-center py-8">No evidence submitted yet. Complete your first module exercise to submit evidence!</p>';
+                return;
+            }
+            
+            userEvidence.forEach(evidence => {
+                const statusColor = evidence.approved ? 'text-green-600' : 
+                                  evidence.status === 'Rejected' ? 'text-red-600' : 'text-blue-600';
+                const statusBg = evidence.approved ? 'bg-green-100' : 
+                               evidence.status === 'Rejected' ? 'bg-red-100' : 'bg-blue-100';
+                
+                const evidenceElement = document.createElement('div');
+                evidenceElement.className = 'border rounded-lg p-6 mb-4';
+                evidenceElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900">${evidence.moduleName}</h4>
+                            <p class="text-sm text-gray-600">Submitted: ${evidence.submissionDate.toLocaleDateString()}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-sm font-medium ${statusBg} ${statusColor}">
+                            ${evidence.approved ? 'Approved' : evidence.status}
+                        </span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <h5 class="font-medium text-gray-900">Description:</h5>
+                            <p class="text-gray-700 text-sm">${evidence.description}</p>
+                        </div>
+                        <div>
+                            <h5 class="font-medium text-gray-900">Reflection:</h5>
+                            <p class="text-gray-700 text-sm">${evidence.reflection}</p>
+                        </div>
+                        <div>
+                            <h5 class="font-medium text-gray-900">Files Submitted:</h5>
+                            <div class="flex flex-wrap gap-2">
+                                ${evidence.files.map(file => `
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        📎 ${file}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ${evidence.feedback ? `
+                            <div class="p-3 bg-yellow-50 rounded-lg">
+                                <h5 class="font-medium text-yellow-900">Feedback:</h5>
+                                <p class="text-yellow-800 text-sm">${evidence.feedback}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                evidenceList.appendChild(evidenceElement);
+            });
+        }
+
+        function loadLearnerReportsData() {
+            if (!currentUser) return;
+            
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === currentUser.id);
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const daysActive = Math.floor((new Date() - currentUser.registrationDate) / (1000 * 60 * 60 * 24));
+            
+            // Update quick stats
+            document.getElementById('totalHoursSpent').textContent = Math.round(completedModules * 8); // Estimate 8 hours per module
+            document.getElementById('averageScore').textContent = completedModules > 0 ? '85%' : '0%'; // Mock average score
+            document.getElementById('streakDays').textContent = Math.min(daysActive, 30); // Mock learning streak
+            document.getElementById('nextMilestone').textContent = completedModules < 5 ? 'Module ' + (completedModules + 1) : 'Complete!';
+        }
+
+        // Additional learner functions
+        function downloadProgressReport() {
+            if (!currentUser) return;
+            
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === currentUser.id);
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const totalModules = userLogbook.length;
+            const progress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+            
+            let reportContent = `
+PROGRESS REPORT - MANAGEMENT ASSISTANT PROFESSIONAL COURSE
+Student: ${currentUser.name}
+Email: ${currentUser.email}
+Department: ${currentUser.department}
+Company: ${currentUser.company}
+Generated: ${new Date().toLocaleDateString()}
+
+=================================================
+
+PROGRESS SUMMARY:
+Overall Progress: ${progress}%
+Modules Completed: ${completedModules}/${totalModules}
+Evidence Submissions: ${userEvidence.length}
+Days Active: ${Math.floor((new Date() - currentUser.registrationDate) / (1000 * 60 * 60 * 24))}
+
+DETAILED MODULE PROGRESS:
+`;
+            
+            userLogbook.forEach(entry => {
+                reportContent += `
+Module: ${entry.moduleName}
+Status: ${entry.status}
+Start Date: ${entry.startDate ? entry.startDate.toLocaleDateString() : 'Not started'}
+Completion Date: ${entry.completionDate ? entry.completionDate.toLocaleDateString() : 'Not completed'}
+Evidence Status: ${entry.evidenceSubmitted ? (entry.evidenceApproved ? 'Approved' : 'Under Review') : 'Not submitted'}
+-------------------------------------------------
+`;
+            });
+            
+            // Create and download file
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentUser.name.replace(/\s+/g, '_')}_Progress_Report_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📊 Progress Report Downloaded!\n\nYour detailed progress report has been downloaded. This includes your completion status, timeline, and evidence submissions.');
+        }
+
+        function downloadCertificate() {
+            if (!currentUser) return;
+            
+            const userLogbook = logbookEntries.filter(entry => entry.userId === currentUser.id);
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const totalModules = userLogbook.length;
+            
+            if (completedModules < totalModules) {
+                alert('🏆 Certificate Not Yet Available\n\nYou need to complete all modules to download your certificate.\n\nProgress: ' + completedModules + '/' + totalModules + ' modules completed\n\nKeep going - you\'re doing great!');
+                return;
+            }
+            
+            alert('🏆 Certificate of Completion\n\nCongratulations! You have successfully completed the Management Assistant Professional Course.\n\n(Certificate would be generated and downloaded here)\n\nThis certificate validates your completion of all practical exercises and evidence submissions.');
+        }
+
+        function downloadEvidencePortfolio() {
+            if (!currentUser) return;
+            
+            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === currentUser.id);
+            
+            if (userEvidence.length === 0) {
+                alert('📁 No Evidence Portfolio Available\n\nYou haven\'t submitted any evidence yet. Complete module exercises and submit evidence to build your portfolio.');
+                return;
+            }
+            
+            let portfolioContent = `
+EVIDENCE PORTFOLIO - MANAGEMENT ASSISTANT PROFESSIONAL COURSE
+Student: ${currentUser.name}
+Email: ${currentUser.email}
+Department: ${currentUser.department}
+Company: ${currentUser.company}
+Generated: ${new Date().toLocaleDateString()}
+
+=================================================
+
+EVIDENCE SUBMISSIONS SUMMARY:
+Total Submissions: ${userEvidence.length}
+Approved Submissions: ${userEvidence.filter(e => e.approved).length}
+Pending Review: ${userEvidence.filter(e => !e.approved && e.status !== 'Rejected').length}
+
+DETAILED EVIDENCE PORTFOLIO:
+`;
+            
+            userEvidence.forEach((evidence, index) => {
+                portfolioContent += `
+SUBMISSION ${index + 1}:
+Module: ${evidence.moduleName}
+Submission Date: ${evidence.submissionDate.toLocaleDateString()}
+Status: ${evidence.approved ? 'Approved' : evidence.status}
+
+Description:
+${evidence.description}
+
+Reflection:
+${evidence.reflection}
+
+Files Submitted: ${evidence.files.join(', ')}
+
+${evidence.feedback ? `Feedback: ${evidence.feedback}` : ''}
+
+=================================================
+`;
+            });
+            
+            // Create and download file
+            const blob = new Blob([portfolioContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentUser.name.replace(/\s+/g, '_')}_Evidence_Portfolio_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📁 Evidence Portfolio Downloaded!\n\nYour complete evidence portfolio has been downloaded. This includes all your submissions, reflections, and feedback.');
+        }
+
+        // Report viewing functions
+        function viewDetailedProgress() {
+            alert('📈 Detailed Progress Analysis\n\nThis would show:\n\n• Learning velocity and patterns\n• Time spent per module\n• Strengths and improvement areas\n• Comparison with peer averages\n• Personalized recommendations\n\n(Detailed analysis interface would open here)');
+        }
+
+        function viewCompetencyMap() {
+            alert('🎯 Skills & Competency Map\n\nThis would display:\n\n• Visual skills matrix\n• Competency levels achieved\n• Professional skills developed\n• Industry-relevant capabilities\n• Career pathway suggestions\n\n(Interactive competency map would open here)');
+        }
+
+        function viewLearningInsights() {
+            alert('💡 Learning Insights\n\nPersonalized insights would include:\n\n• Your learning style preferences\n• Peak performance times\n• Most effective learning methods\n• Progress acceleration tips\n• Motivation and engagement patterns\n\n(Insights dashboard would open here)');
+        }
+
+        // Support and help functions
+        function viewLearningGuide() {
+            alert('📚 Learning Guide\n\nThe comprehensive learning guide covers:\n\n• Platform navigation\n• How to complete exercises\n• Evidence submission best practices\n• Progress tracking\n• Tips for success\n\n(Learning guide would open here)');
+        }
+
+        function viewFAQ() {
+            alert('❓ Frequently Asked Questions\n\nCommon questions include:\n\n• How do I submit evidence?\n• What makes good evidence?\n• How is my progress tracked?\n• When will I receive feedback?\n• How do I download my logbook?\n\n(FAQ section would open here)');
+        }
+
+        function viewTutorials() {
+            alert('🎥 Video Tutorials\n\nAvailable tutorials:\n\n• Platform overview (5 min)\n• Submitting your first evidence (3 min)\n• Understanding feedback (2 min)\n• Downloading reports (2 min)\n• Getting help and support (3 min)\n\n(Video tutorial library would open here)');
+        }
+
+        function viewEvidenceGuidelines() {
+            alert('📋 Evidence Submission Guidelines\n\nBest practices for quality evidence:\n\n• Be specific and detailed\n• Include relevant files/photos\n• Reflect on your learning\n• Connect to real-world applications\n• Follow submission formats\n\n(Detailed guidelines would open here)');
+        }
+
+        function handleSupportRequest(event) {
+            event.preventDefault();
+            
+            const category = event.target.querySelector('select').value;
+            const message = event.target.querySelector('textarea').value;
+            
+            alert('📧 Support Request Sent!\n\nCategory: ' + category + '\n\nYour support request has been submitted. Our team will respond within 24 hours.\n\nFor urgent issues, please call +27 12 001 4230 during business hours.');
+            
+            event.target.reset();
+        }
+
+        // Enrollment management functions
+        function loadEnrollmentsSection() {
+            loadEnrollmentFilters();
+            loadEnrollmentsList();
+        }
+        
+        function loadEnrollmentFilters() {
+            const courseFilter = document.getElementById('enrollmentCourseFilter');
+            courseFilter.innerHTML = '<option value="">All Courses</option>';
+            
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.id;
+                option.textContent = course.title;
+                courseFilter.appendChild(option);
+            });
+        }
+        
+        function loadEnrollmentsList() {
+            const enrollmentsList = document.getElementById('enrollmentsList');
+            enrollmentsList.innerHTML = '';
+            
+            if (courseEnrollments.length === 0) {
+                enrollmentsList.innerHTML = '<p class="text-gray-500 text-center py-8">No course enrollments yet. Click "Enroll Learner" to get started.</p>';
+                return;
+            }
+            
+            const courseFilter = document.getElementById('enrollmentCourseFilter').value;
+            const statusFilter = document.getElementById('enrollmentStatusFilter').value;
+            
+            let filteredEnrollments = courseEnrollments;
+            
+            if (courseFilter) {
+                filteredEnrollments = filteredEnrollments.filter(e => e.courseId == courseFilter);
+            }
+            
+            if (statusFilter) {
+                filteredEnrollments = filteredEnrollments.filter(e => e.status === statusFilter);
+            }
+            
+            filteredEnrollments.forEach(enrollment => {
+                const user = users.find(u => u.id === enrollment.userId);
+                const course = courses.find(c => c.id === enrollment.courseId);
+                
+                if (!user || !course) return;
+                
+                const userLogbook = logbookEntries.filter(entry => 
+                    entry.userId === enrollment.userId && 
+                    course.modules.some(m => m.id === entry.moduleId)
+                );
+                const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+                const progress = course.modules.length > 0 ? Math.round((completedModules / course.modules.length) * 100) : 0;
+                
+                const statusColor = enrollment.status === 'active' ? 'text-green-600 bg-green-100' : 
+                                  enrollment.status === 'completed' ? 'text-blue-600 bg-blue-100' : 'text-yellow-600 bg-yellow-100';
+                
+                const enrollmentElement = document.createElement('div');
+                enrollmentElement.className = 'border rounded-lg p-6 mb-4 bg-white';
+                enrollmentElement.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4 mb-2">
+                                <h4 class="text-lg font-semibold text-gray-900">${user.name}</h4>
+                                <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColor}">
+                                    ${enrollment.status.charAt(0).toUpperCase() + enrollment.status.slice(1)}
+                                </span>
+                            </div>
+                            <p class="text-gray-600 mb-2">${course.title}</p>
+                            <div class="flex items-center space-x-6 text-sm text-gray-500">
+                                <span>📧 ${user.email}</span>
+                                <span>🏢 ${user.department}</span>
+                                <span>📅 Started: ${enrollment.startDate.toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="text-right ml-6">
+                            <div class="text-2xl font-bold text-light-green mb-1">${progress}%</div>
+                            <div class="text-sm text-gray-600 mb-3">Progress</div>
+                            <div class="flex space-x-2">
+                                <button onclick="viewEnrollmentDetails(${enrollment.id})" class="text-blue-600 hover:text-blue-800 text-sm">View Details</button>
+                                <button onclick="updateEnrollmentStatus(${enrollment.id})" class="text-green-600 hover:text-green-800 text-sm">Update Status</button>
+                                <button onclick="removeEnrollment(${enrollment.id})" class="text-red-600 hover:text-red-800 text-sm">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-600">
+                                Modules: ${completedModules}/${course.modules.length} completed
+                            </div>
+                            <div class="w-48 bg-gray-200 rounded-full h-2">
+                                <div class="bg-light-green h-2 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                enrollmentsList.appendChild(enrollmentElement);
+            });
+        }
+        
+        function filterEnrollments() {
+            loadEnrollmentsList();
+        }
+        
+        function showEnrollLearner() {
+            // Populate learner dropdown
+            const learnerSelect = document.getElementById('enrollLearnerSelect');
+            learnerSelect.innerHTML = '<option value="">Choose a learner...</option>';
+            
+            const interns = users.filter(u => u.type === 'intern');
+            interns.forEach(intern => {
+                const option = document.createElement('option');
+                option.value = intern.id;
+                option.textContent = `${intern.name} (${intern.email})`;
+                learnerSelect.appendChild(option);
+            });
+            
+            // Populate course dropdown
+            const courseSelect = document.getElementById('enrollCourseSelect');
+            courseSelect.innerHTML = '<option value="">Choose a course...</option>';
+            
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.id;
+                option.textContent = course.title;
+                courseSelect.appendChild(option);
+            });
+            
+            // Set default start date to today
+            const startDateInput = document.querySelector('#enrollLearnerModal input[type="date"]');
+            startDateInput.value = new Date().toISOString().split('T')[0];
+            
+            document.getElementById('enrollLearnerModal').classList.remove('hidden');
+        }
+        
+        function handleEnrollLearner(event) {
+            event.preventDefault();
+            
+            const userId = parseInt(event.target.querySelector('#enrollLearnerSelect').value);
+            const courseId = parseInt(event.target.querySelector('#enrollCourseSelect').value);
+            const status = event.target.querySelectorAll('select')[2].value;
+            const startDate = new Date(event.target.querySelector('input[type="date"]').value);
+            
+            // Check if already enrolled
+            const existingEnrollment = courseEnrollments.find(e => 
+                e.userId === userId && e.courseId === courseId
+            );
+            
+            if (existingEnrollment) {
+                alert('❌ Learner is already enrolled in this course!');
+                return;
+            }
+            
+            // Create enrollment
+            const enrollment = {
+                id: courseEnrollments.length + 1,
+                userId: userId,
+                courseId: courseId,
+                status: status,
+                startDate: startDate,
+                enrolledBy: currentUser.name,
+                enrollmentDate: new Date()
+            };
+            
+            courseEnrollments.push(enrollment);
+            
+            // Initialize progress tracking for this enrollment
+            const course = courses.find(c => c.id === courseId);
+            if (course) {
+                course.modules.forEach(module => {
+                    // Remove any existing logbook entries for this user/module combination
+                    logbookEntries = logbookEntries.filter(entry => 
+                        !(entry.userId === userId && entry.moduleId === module.id)
+                    );
+                    
+                    // Add new logbook entry
+                    logbookEntries.push({
+                        id: logbookEntries.length + 1,
+                        userId: userId,
+                        moduleId: module.id,
+                        moduleName: module.title,
+                        status: 'Not Started',
+                        startDate: null,
+                        completionDate: null,
+                        evidenceSubmitted: false,
+                        evidenceApproved: false
+                    });
+                });
+            }
+            
+            const user = users.find(u => u.id === userId);
+            
+            closeModal();
+            loadEnrollmentsList();
+            updateAdminStats();
+            
+            alert(`✅ Enrollment Successful!\n\nLearner: ${user.name}\nCourse: ${course.title}\nStatus: ${status}\nStart Date: ${startDate.toLocaleDateString()}\n\nThe learner can now access this course from their dashboard.`);
+        }
+        
+        function viewEnrollmentDetails(enrollmentId) {
+            const enrollment = courseEnrollments.find(e => e.id === enrollmentId);
+            const user = users.find(u => u.id === enrollment.userId);
+            const course = courses.find(c => c.id === enrollment.courseId);
+            
+            const userLogbook = logbookEntries.filter(entry => 
+                entry.userId === enrollment.userId && 
+                course.modules.some(m => m.id === entry.moduleId)
+            );
+            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+            const progress = course.modules.length > 0 ? Math.round((completedModules / course.modules.length) * 100) : 0;
+            const evidenceCount = evidenceSubmissions.filter(sub => sub.userId === enrollment.userId).length;
+            
+            alert(`📋 Enrollment Details\n\nLearner: ${user.name}\nEmail: ${user.email}\nCourse: ${course.title}\nStatus: ${enrollment.status}\nStart Date: ${enrollment.startDate.toLocaleDateString()}\nEnrolled By: ${enrollment.enrolledBy}\n\nProgress: ${progress}%\nCompleted Modules: ${completedModules}/${course.modules.length}\nEvidence Submissions: ${evidenceCount}`);
+        }
+        
+        function updateEnrollmentStatus(enrollmentId) {
+            const enrollment = courseEnrollments.find(e => e.id === enrollmentId);
+            const newStatus = prompt('Update enrollment status:\n\nCurrent: ' + enrollment.status + '\n\nEnter new status (active/completed/paused):', enrollment.status);
+            
+            if (newStatus && ['active', 'completed', 'paused'].includes(newStatus.toLowerCase())) {
+                enrollment.status = newStatus.toLowerCase();
+                loadEnrollmentsList();
+                alert('✅ Enrollment status updated to: ' + newStatus);
+            } else if (newStatus) {
+                alert('❌ Invalid status. Please use: active, completed, or paused');
+            }
+        }
+        
+        function removeEnrollment(enrollmentId) {
+            const enrollment = courseEnrollments.find(e => e.id === enrollmentId);
+            const user = users.find(u => u.id === enrollment.userId);
+            const course = courses.find(c => c.id === enrollment.courseId);
+            
+            if (!confirm(`⚠️ Remove Enrollment?\n\nThis will remove ${user.name} from "${course.title}" and delete all their progress data.\n\nThis action cannot be undone. Continue?`)) {
+                return;
+            }
+            
+            // Remove enrollment
+            courseEnrollments = courseEnrollments.filter(e => e.id !== enrollmentId);
+            
+            // Remove associated logbook entries
+            logbookEntries = logbookEntries.filter(entry => 
+                !(entry.userId === enrollment.userId && course.modules.some(m => m.id === entry.moduleId))
+            );
+            
+            // Remove associated evidence submissions
+            evidenceSubmissions = evidenceSubmissions.filter(sub => 
+                !(sub.userId === enrollment.userId && course.modules.some(m => m.id === sub.moduleId))
+            );
+            
+            loadEnrollmentsList();
+            updateAdminStats();
+            
+            alert(`🗑️ Enrollment Removed\n\n${user.name} has been removed from "${course.title}" and all associated data has been deleted.`);
+        }
+
+        // Initialize system
+        console.log('🚀 GWConnect LMS Professional System Initialized');
+        console.log('📧 Contact: info@gwconnect.org');
+        console.log('📞 Phone: 012 001 4230');
+        console.log('📍 Address: 385 Roslyn Avenue, Waterkloof Glen, Pretoria');
+        console.log('🎯 System Capacity: 100+ concurrent interns');
+        console.log('📚 Features: Practical exercises, Evidence submission, Logbook generation, Course enrollment system');
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ef6dfd908d9863',t:'MTc1NTE2Mzc4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
