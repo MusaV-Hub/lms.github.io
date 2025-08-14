@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GWConnect LMS - Professional Learning Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -41,9 +39,13 @@
                 <div class="flex items-center">
                     <h1 class="text-2xl font-bold text-white font-heading">GWConnect <span class="text-gold">LMS</span></h1>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div id="authButtons" class="flex items-center space-x-4">
                     <button onclick="showLogin()" class="bg-light-green hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors duration-200">Login</button>
                     <button onclick="showRegister()" class="border border-white text-white hover:bg-white hover:text-dark-green px-4 py-2 rounded-md transition-colors duration-200">Register</button>
+                </div>
+                <div id="userInfo" class="hidden items-center space-x-4 text-white">
+                    <span>Welcome, <span id="navUserName">User</span></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors duration-200">Logout</button>
                 </div>
             </div>
         </div>
@@ -310,6 +312,7 @@
                             <h3 class="text-lg font-semibold text-gray-900">Learner Management</h3>
                             <div class="flex space-x-3">
                                 <input type="text" placeholder="Search learners..." class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                <button onclick="sendBulkCredentials()" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">Send All Credentials</button>
                                 <button onclick="downloadImportTemplate()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Download Template</button>
                                 <button onclick="showImportLearners()" class="bg-gold text-dark-green px-4 py-2 rounded-md hover:bg-yellow-400">Import Learners</button>
                                 <button onclick="showAddLearner()" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Add Learner</button>
@@ -344,6 +347,57 @@
                         <h3 class="text-lg font-semibold text-gray-900">Course Management</h3>
                         <button onclick="showCreateCourse()" class="bg-light-green text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors duration-200">Create New Course</button>
                     </div>
+                    
+                    <!-- Course Filters -->
+                    <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Search Courses</label>
+                                <input type="text" id="courseSearchInput" placeholder="Search by title or description..." 
+                                       onkeyup="filterCourses()" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Creator</label>
+                                <select id="courseCreatorFilter" onchange="filterCourses()" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                    <option value="">All Creators</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sort by</label>
+                                <select id="courseSortFilter" onchange="filterCourses()" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                    <option value="title">Title A-Z</option>
+                                    <option value="title-desc">Title Z-A</option>
+                                    <option value="modules">Most Modules</option>
+                                    <option value="modules-desc">Least Modules</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Module Count</label>
+                                <select id="courseModuleFilter" onchange="filterCourses()" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                                    <option value="">All Courses</option>
+                                    <option value="1-3">1-3 Modules</option>
+                                    <option value="4-6">4-6 Modules</option>
+                                    <option value="7-10">7-10 Modules</option>
+                                    <option value="10+">10+ Modules</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <div class="text-sm text-gray-600">
+                                <span id="courseFilterResults">Showing all courses</span>
+                            </div>
+                            <button onclick="clearCourseFilters()" class="text-sm text-light-green hover:text-green-600 font-medium">
+                                Clear All Filters
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div id="coursesList" class="space-y-4">
                         <!-- Courses will be dynamically loaded here -->
                     </div>
@@ -444,6 +498,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -464,6 +520,7 @@
                 <div class="flex space-x-8 border-t">
                     <button onclick="showLearnerSection('overview')" class="learner-tab py-4 px-2 border-b-2 border-light-green text-light-green font-medium">Course Overview</button>
                     <button onclick="showLearnerSection('progress')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">My Progress</button>
+                    <button onclick="showLearnerSection('achievements')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">🏆 Achievements</button>
                     <button onclick="showLearnerSection('evidence')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">My Evidence</button>
                     <button onclick="showLearnerSection('reports')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Reports & Downloads</button>
                     <button onclick="showLearnerSection('support')" class="learner-tab py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">Help & Support</button>
@@ -493,6 +550,80 @@
                     <h2 class="text-2xl font-bold text-dark-green mb-6">Management Assistant Professional Course</h2>
                     <div id="courseModules" class="space-y-6">
                         <!-- Modules will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div id="learnerAchievements" class="learner-section hidden">
+                <!-- Achievement Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow p-6 text-white">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                                <span class="text-white text-xl">🏆</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium opacity-90">Achievements Earned</p>
+                                <p class="text-2xl font-semibold" id="achievementsEarnedCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow p-6 text-white">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                                <span class="text-white text-xl">⭐</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium opacity-90">Total Points</p>
+                                <p class="text-2xl font-semibold" id="totalPointsCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-500 to-pink-500 rounded-lg shadow p-6 text-white">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                                <span class="text-white text-xl">🔥</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium opacity-90">Current Streak</p>
+                                <p class="text-2xl font-semibold" id="currentStreakCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-500 to-blue-500 rounded-lg shadow p-6 text-white">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                                <span class="text-white text-xl">🎯</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium opacity-90">Completion Rate</p>
+                                <p class="text-2xl font-semibold" id="achievementCompletionRate">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Achievements -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">🎉 Recent Achievements</h3>
+                    <div id="recentAchievements" class="space-y-4">
+                        <!-- Recent achievements will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- All Achievements Grid -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">All Achievements</h3>
+                        <div class="flex space-x-2">
+                            <button onclick="filterAchievements('all')" class="achievement-filter-btn px-4 py-2 text-sm rounded-md bg-light-green text-white">All</button>
+                            <button onclick="filterAchievements('earned')" class="achievement-filter-btn px-4 py-2 text-sm rounded-md bg-gray-200 text-gray-700">Earned</button>
+                            <button onclick="filterAchievements('locked')" class="achievement-filter-btn px-4 py-2 text-sm rounded-md bg-gray-200 text-gray-700">Locked</button>
+                        </div>
+                    </div>
+                    <div id="achievementsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Achievements will be loaded here -->
                     </div>
                 </div>
             </div>
@@ -741,7 +872,7 @@
                                 </div>
                                 <div>
                                     <p class="font-medium">Email Support</p>
-                                    <p class="text-gray-600">support@gwconnect.org/p>
+                                    <p class="text-gray-600">support@gwconnect.co.za</p>
                                     <p class="text-xs text-gray-500">Response within 24 hours</p>
                                 </div>
                             </div>
@@ -833,6 +964,10 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
                     <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Cell Number</label>
+                    <input type="tel" required placeholder="e.g., +27 12 345 6789" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-light-green">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">ID Number</label>
@@ -963,6 +1098,25 @@
         </div>
     </div>
 
+    <!-- Achievement Notification Modal -->
+    <div id="achievementModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 fade-in text-center">
+            <div class="mb-6">
+                <div class="text-6xl mb-4" id="achievementIcon">🏆</div>
+                <h2 class="text-2xl font-bold text-dark-green mb-2">Achievement Unlocked!</h2>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2" id="achievementName">Achievement Name</h3>
+                <p class="text-gray-600" id="achievementDescription">Achievement description</p>
+            </div>
+            <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg p-4 mb-6 text-white">
+                <div class="text-lg font-semibold">+<span id="achievementPoints">100</span> Points!</div>
+                <div class="text-sm opacity-90">Keep up the great work!</div>
+            </div>
+            <button onclick="closeAchievementModal()" class="w-full bg-light-green text-white py-3 px-6 rounded-md hover:bg-green-600 transition-colors duration-200 font-semibold">
+                Awesome! 🎉
+            </button>
+        </div>
+    </div>
+
     <!-- Evidence Submission Modal -->
     <div id="evidenceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto fade-in">
@@ -1006,7 +1160,7 @@
         let users = [
             {
                 id: 1,
-                email: "admin@gwconnect.org",
+                email: "admin@gwconnect.com",
                 password: "admin123",
                 name: "System Administrator",
                 type: "admin",
@@ -1082,6 +1236,23 @@
         let evidenceSubmissions = [];
         let logbookEntries = [];
 
+        // Gamification system
+        let achievements = [
+            { id: 1, name: "First Steps", description: "Started your first module", icon: "🚀", type: "milestone", requirement: "start_first_module" },
+            { id: 2, name: "Evidence Master", description: "Submitted your first evidence", icon: "📋", type: "milestone", requirement: "first_evidence" },
+            { id: 3, name: "Quick Learner", description: "Completed a module in under 3 days", icon: "⚡", type: "performance", requirement: "quick_completion" },
+            { id: 4, name: "Perfectionist", description: "Got 5 evidence submissions approved", icon: "⭐", type: "quality", requirement: "approved_evidence_5" },
+            { id: 5, name: "Consistent", description: "7-day learning streak", icon: "🔥", type: "engagement", requirement: "streak_7" },
+            { id: 6, name: "Helper", description: "Provided feedback to peers", icon: "🤝", type: "social", requirement: "peer_help" },
+            { id: 7, name: "Halfway Hero", description: "Completed 50% of course", icon: "🎯", type: "milestone", requirement: "halfway_complete" },
+            { id: 8, name: "Graduate", description: "Completed entire course", icon: "🎓", type: "milestone", requirement: "course_complete" },
+            { id: 9, name: "Early Bird", description: "Submitted evidence before deadline", icon: "🌅", type: "performance", requirement: "early_submission" },
+            { id: 10, name: "Reflective Learner", description: "Wrote detailed reflections", icon: "💭", type: "quality", requirement: "quality_reflection" }
+        ];
+
+        let userAchievements = []; // { userId, achievementId, earnedDate, notified }
+        let userStats = []; // { userId, totalPoints, currentStreak, longestStreak, lastActivity }
+
         let currentUser = null;
         let currentCourse = null;
 
@@ -1104,6 +1275,7 @@
             document.getElementById('addLearnerModal').classList.add('hidden');
             document.getElementById('importLearnersModal').classList.add('hidden');
             document.getElementById('enrollLearnerModal').classList.add('hidden');
+            document.getElementById('achievementModal').classList.add('hidden');
             
             // Reset course form when closing
             if (!document.getElementById('createCourseModal').classList.contains('hidden') === false) {
@@ -1133,6 +1305,12 @@
             // Update display names
             document.getElementById('adminName').textContent = user.name;
             document.getElementById('learnerName').textContent = user.name;
+            document.getElementById('navUserName').textContent = user.name;
+            
+            // Hide auth buttons and show user info
+            document.getElementById('authButtons').classList.add('hidden');
+            document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('userInfo').classList.add('flex');
 
             if (user.type === 'admin') {
                 showAdminDashboard();
@@ -1276,11 +1454,20 @@
                     evidenceApproved: false
                 });
             });
+            
+            // Initialize user stats for gamification
+            initializeUserStats(userId);
         }
 
         function logout() {
             currentUser = null;
             currentCourse = null;
+            
+            // Show auth buttons and hide user info
+            document.getElementById('authButtons').classList.remove('hidden');
+            document.getElementById('userInfo').classList.add('hidden');
+            document.getElementById('userInfo').classList.remove('flex');
+            
             showLanding();
             alert('👋 You have been logged out successfully.');
         }
@@ -1327,6 +1514,9 @@
             switch(section) {
                 case 'progress':
                     loadLearnerProgressData();
+                    break;
+                case 'achievements':
+                    loadAchievementsSection();
                     break;
                 case 'evidence':
                     loadMyEvidenceList();
@@ -1429,12 +1619,24 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${evidenceCount} submitted</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            ${intern.status || 'Active'}
-                        </span>
+                        <div class="space-y-1">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                ${intern.status || 'Active'}
+                            </span>
+                            ${intern.credentialsSent ? `
+                                <div class="text-xs text-blue-600">
+                                    📧 Credentials sent ${intern.credentialsSentDate ? intern.credentialsSentDate.toLocaleDateString() : ''}
+                                </div>
+                            ` : `
+                                <div class="text-xs text-orange-600">
+                                    ⚠️ Credentials not sent
+                                </div>
+                            `}
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button onclick="viewLearnerDetails(${intern.id})" class="text-light-green hover:text-green-600 mr-3">View</button>
+                        <button onclick="sendCredentials(${intern.id})" class="text-purple-600 hover:text-purple-800 mr-3">Send Credentials</button>
                         <button onclick="downloadLearnerLogbook(${intern.id})" class="text-blue-600 hover:text-blue-800">Download</button>
                     </td>
                 `;
@@ -1444,10 +1646,112 @@
 
         // Load courses for admin
         function loadCoursesAdmin() {
+            // Populate creator filter dropdown
+            populateCourseCreatorFilter();
+            
+            // Apply filters and load courses
+            filterCourses();
+        }
+        
+        function populateCourseCreatorFilter() {
+            const creatorFilter = document.getElementById('courseCreatorFilter');
+            const creators = [...new Set(courses.map(course => course.createdBy))];
+            
+            // Clear existing options except "All Creators"
+            creatorFilter.innerHTML = '<option value="">All Creators</option>';
+            
+            creators.forEach(creator => {
+                const option = document.createElement('option');
+                option.value = creator;
+                option.textContent = creator;
+                creatorFilter.appendChild(option);
+            });
+        }
+        
+        function filterCourses() {
             const coursesList = document.getElementById('coursesList');
+            const searchTerm = document.getElementById('courseSearchInput').value.toLowerCase();
+            const creatorFilter = document.getElementById('courseCreatorFilter').value;
+            const sortFilter = document.getElementById('courseSortFilter').value;
+            const moduleFilter = document.getElementById('courseModuleFilter').value;
+            
+            // Filter courses
+            let filteredCourses = courses.filter(course => {
+                // Search filter
+                const matchesSearch = !searchTerm || 
+                    course.title.toLowerCase().includes(searchTerm) || 
+                    course.description.toLowerCase().includes(searchTerm);
+                
+                // Creator filter
+                const matchesCreator = !creatorFilter || course.createdBy === creatorFilter;
+                
+                // Module count filter
+                let matchesModuleCount = true;
+                if (moduleFilter) {
+                    const moduleCount = course.modules.length;
+                    switch (moduleFilter) {
+                        case '1-3':
+                            matchesModuleCount = moduleCount >= 1 && moduleCount <= 3;
+                            break;
+                        case '4-6':
+                            matchesModuleCount = moduleCount >= 4 && moduleCount <= 6;
+                            break;
+                        case '7-10':
+                            matchesModuleCount = moduleCount >= 7 && moduleCount <= 10;
+                            break;
+                        case '10+':
+                            matchesModuleCount = moduleCount > 10;
+                            break;
+                    }
+                }
+                
+                return matchesSearch && matchesCreator && matchesModuleCount;
+            });
+            
+            // Sort courses
+            filteredCourses.sort((a, b) => {
+                switch (sortFilter) {
+                    case 'newest':
+                        return new Date(b.createdDate) - new Date(a.createdDate);
+                    case 'oldest':
+                        return new Date(a.createdDate) - new Date(b.createdDate);
+                    case 'title':
+                        return a.title.localeCompare(b.title);
+                    case 'title-desc':
+                        return b.title.localeCompare(a.title);
+                    case 'modules':
+                        return b.modules.length - a.modules.length;
+                    case 'modules-desc':
+                        return a.modules.length - b.modules.length;
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Update results count
+            const resultsText = filteredCourses.length === courses.length 
+                ? 'Showing all courses' 
+                : `Showing ${filteredCourses.length} of ${courses.length} courses`;
+            document.getElementById('courseFilterResults').textContent = resultsText;
+            
+            // Clear and populate courses list
             coursesList.innerHTML = '';
+            
+            if (filteredCourses.length === 0) {
+                coursesList.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">🔍</div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No Courses Found</h3>
+                        <p class="text-gray-600 mb-6">No courses match your current filter criteria.</p>
+                        <button onclick="clearCourseFilters()" class="bg-light-green text-white px-6 py-2 rounded-md hover:bg-green-600">
+                            Clear Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
 
-            courses.forEach(course => {
+            filteredCourses.forEach(course => {
                 const courseElement = document.createElement('div');
                 courseElement.className = 'border rounded-lg p-6 hover:shadow-md transition-shadow duration-200';
                 courseElement.innerHTML = `
@@ -1559,7 +1863,7 @@
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
                             <p class="text-blue-800 text-sm">
                                 <strong>Need help?</strong><br>
-                                Contact support at +27 12 001 4230 or email support@gwconnect.org
+                                Contact support at +27 12 001 4230 or email support@gwconnect.co.za
                             </p>
                         </div>
                     </div>
@@ -1773,6 +2077,10 @@
                 userLogbook.startDate = new Date();
             }
             
+            // Update streak and check for first module achievement
+            updateUserStreak(currentUser.id);
+            checkAchievements(currentUser.id, 'module_started');
+            
             alert('📚 Module Started!\n\nYou can now begin working on the practical exercise. Remember to document your work as you go - you\'ll need to submit evidence when you complete the exercise.');
             loadLearnerCourse();
         }
@@ -1825,6 +2133,13 @@
                 userLogbook.status = 'Evidence Submitted';
             }
             
+            // Check achievements for evidence submission
+            updateUserStreak(currentUser.id);
+            checkAchievements(currentUser.id, 'evidence_submitted', {
+                isEarly: true, // Could implement deadline checking
+                reflectionLength: reflection.length
+            });
+            
             closeModal();
             loadLearnerCourse();
             updateAdminStats();
@@ -1846,6 +2161,22 @@
                 userLogbook.status = 'Completed';
                 userLogbook.completionDate = new Date();
                 userLogbook.evidenceApproved = true;
+                
+                // Calculate completion time for quick learner achievement
+                const startDate = userLogbook.startDate;
+                const completionTime = startDate ? Math.floor((userLogbook.completionDate - startDate) / (1000 * 60 * 60 * 24)) : 999;
+                
+                // Check achievements
+                checkAchievements(submission.userId, 'evidence_approved');
+                checkAchievements(submission.userId, 'module_completed', { completionTime });
+                checkAchievements(submission.userId, 'progress_update');
+                
+                // Check if course is complete
+                const allUserLogbook = logbookEntries.filter(entry => entry.userId === submission.userId);
+                const completedModules = allUserLogbook.filter(entry => entry.status === 'Completed').length;
+                if (completedModules === allUserLogbook.length && allUserLogbook.length > 0) {
+                    checkAchievements(submission.userId, 'course_completed');
+                }
             }
             
             loadEvidenceReview();
@@ -2158,6 +2489,15 @@ MODULE DETAILS:
             
             alert('✅ Course updated successfully!\n\nCourse: ' + title + '\nModules: ' + modules.length + '\n\nAll learner progress has been synchronized with the updated course structure.');
         }
+        
+        function clearCourseFilters() {
+            document.getElementById('courseSearchInput').value = '';
+            document.getElementById('courseCreatorFilter').value = '';
+            document.getElementById('courseSortFilter').value = 'newest';
+            document.getElementById('courseModuleFilter').value = '';
+            
+            filterCourses();
+        }
 
         function updateLearnerProgressForCourse(courseId, newModules) {
             // Update logbook entries for all learners when course is modified
@@ -2275,6 +2615,154 @@ MODULE DETAILS:
             alert('📊 Learners Exported!\n\nLearner data has been exported to CSV format.');
         }
 
+        function sendCredentials(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            const confirmSend = confirm(`📧 Send Login Credentials?\n\nThis will send login credentials to:\n\nName: ${user.name}\nEmail: ${user.email}\nCell: ${user.cellNumber}\n\nCredentials will be sent via both email and SMS for security.\n\nContinue?`);
+            
+            if (!confirmSend) return;
+            
+            // Simulate sending credentials via email and SMS
+            const emailContent = `
+Welcome to GWConnect LMS!
+
+Dear ${user.name},
+
+Your learning account has been set up successfully. Here are your login credentials:
+
+🌐 Platform: GWConnect LMS
+📧 Email: ${user.email}
+🔑 Password: ${user.password}
+🏢 Department: ${user.department}
+🏭 Company: ${user.company}
+
+📱 Access Instructions:
+1. Visit the GWConnect LMS platform
+2. Click "Login" 
+3. Enter your email and password
+4. Start your Management Assistant Professional Course
+
+📞 Support:
+- Phone: +27 12 001 4230
+- Email: support@gwconnect.co.za
+- Address: 385 Roslyn Avenue, Waterkloof Glen, Pretoria
+
+🎯 What's Next:
+- Complete your profile setup
+- Start with Module 1: Office Organization & Time Management
+- Submit evidence for each practical exercise
+- Track your progress and download your logbook
+
+For security reasons, please change your password after your first login.
+
+Welcome to your professional development journey!
+
+Best regards,
+GWConnect LMS Team
+            `;
+            
+            const smsContent = `GWConnect LMS: Welcome ${user.name}! Your login: Email: ${user.email}, Password: ${user.password}. Visit platform to start your course. Support: 012 001 4230`;
+            
+            // In a real system, this would integrate with email/SMS services
+            console.log('📧 Email sent to:', user.email);
+            console.log('Email content:', emailContent);
+            console.log('📱 SMS sent to:', user.cellNumber);
+            console.log('SMS content:', smsContent);
+            
+            // Update user record to track credential sending
+            user.credentialsSent = true;
+            user.credentialsSentDate = new Date();
+            user.credentialsSentBy = currentUser.name;
+            
+            alert(`✅ Credentials Sent Successfully!\n\n📧 Email sent to: ${user.email}\n📱 SMS sent to: ${user.cellNumber}\n\nThe learner will receive:\n• Login instructions\n• Platform access details\n• Course overview\n• Support contact information\n\nThey can now login and start their learning journey immediately.`);
+            
+            // Refresh the learners table to show updated status
+            loadLearnersTable();
+        }
+
+        function sendBulkCredentials() {
+            const interns = users.filter(u => u.type === 'intern');
+            const unsent = interns.filter(u => !u.credentialsSent);
+            
+            if (unsent.length === 0) {
+                alert('✅ All Credentials Already Sent!\n\nAll learners have already received their login credentials.\n\nYou can still send individual credentials using the "Send Credentials" button if needed.');
+                return;
+            }
+            
+            const confirmBulk = confirm(`📧 Send Bulk Credentials?\n\nThis will send login credentials to ${unsent.length} learners who haven't received them yet:\n\n${unsent.map(u => `• ${u.name} (${u.email})`).join('\n')}\n\nCredentials will be sent via both email and SMS.\n\nContinue?`);
+            
+            if (!confirmBulk) return;
+            
+            let successCount = 0;
+            let failCount = 0;
+            
+            unsent.forEach(user => {
+                try {
+                    // Simulate sending credentials
+                    const emailContent = `
+Welcome to GWConnect LMS!
+
+Dear ${user.name},
+
+Your learning account has been set up successfully. Here are your login credentials:
+
+🌐 Platform: GWConnect LMS
+📧 Email: ${user.email}
+🔑 Password: ${user.password}
+🏢 Department: ${user.department}
+🏭 Company: ${user.company}
+
+📱 Access Instructions:
+1. Visit the GWConnect LMS platform
+2. Click "Login" 
+3. Enter your email and password
+4. Start your Management Assistant Professional Course
+
+📞 Support:
+- Phone: +27 12 001 4230
+- Email: support@gwconnect.co.za
+- Address: 385 Roslyn Avenue, Waterkloof Glen, Pretoria
+
+🎯 What's Next:
+- Complete your profile setup
+- Start with Module 1: Office Organization & Time Management
+- Submit evidence for each practical exercise
+- Track your progress and download your logbook
+
+For security reasons, please change your password after your first login.
+
+Welcome to your professional development journey!
+
+Best regards,
+GWConnect LMS Team
+                    `;
+                    
+                    const smsContent = `GWConnect LMS: Welcome ${user.name}! Your login: Email: ${user.email}, Password: ${user.password}. Visit platform to start your course. Support: 012 001 4230`;
+                    
+                    // In a real system, this would integrate with email/SMS services
+                    console.log('📧 Bulk email sent to:', user.email);
+                    console.log('📱 Bulk SMS sent to:', user.cellNumber);
+                    
+                    // Update user record
+                    user.credentialsSent = true;
+                    user.credentialsSentDate = new Date();
+                    user.credentialsSentBy = currentUser.name;
+                    user.bulkSent = true;
+                    
+                    successCount++;
+                } catch (error) {
+                    console.error('Failed to send credentials to:', user.email, error);
+                    failCount++;
+                }
+            });
+            
+            // Refresh the learners table
+            loadLearnersTable();
+            
+            alert(`✅ Bulk Credentials Sent!\n\n📊 Summary:\n• Successfully sent: ${successCount} learners\n• Failed: ${failCount} learners\n\nAll learners will receive:\n• Email with detailed login instructions\n• SMS with quick access credentials\n• Platform overview and support information\n\nThey can now login and start their learning journey immediately.`);
+        }
+
         // Learner management functions
         function showAddLearner() {
             document.getElementById('addLearnerModal').classList.remove('hidden');
@@ -2289,6 +2777,7 @@ MODULE DETAILS:
             
             const name = event.target.querySelector('input[type="text"]').value;
             const email = event.target.querySelector('input[type="email"]').value;
+            const cellNumber = event.target.querySelector('input[type="tel"]').value;
             const idNumber = event.target.querySelectorAll('input[type="text"]')[1].value;
             const department = event.target.querySelector('select').value;
             const company = event.target.querySelectorAll('input[type="text"]')[2].value;
@@ -2305,6 +2794,7 @@ MODULE DETAILS:
                 id: users.length + 1,
                 name: name,
                 email: email,
+                cellNumber: cellNumber,
                 idNumber: idNumber,
                 password: password,
                 type: 'intern',
@@ -2323,14 +2813,14 @@ MODULE DETAILS:
             loadLearnersTable();
             updateAdminStats();
             
-            alert('✅ Learner Added Successfully!\n\nName: ' + name + '\nEmail: ' + email + '\nDepartment: ' + department + '\n\nThe learner can now login and start their courses.');
+            alert('✅ Learner Added Successfully!\n\nName: ' + name + '\nEmail: ' + email + '\nDepartment: ' + department + '\n\nThe learner can now login with their credentials and start their courses immediately.');
         }
 
         function downloadImportTemplate() {
-            const templateData = `Full Name,Email,ID Number,Department,Company,Temporary Password
-John Smith,john.smith@company.com,1234567890123,Administration,ABC Company,TempPass123
-Jane Doe,jane.doe@company.com,9876543210987,Human Resources,XYZ Corp,TempPass456
-Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`;
+            const templateData = `Full Name,Email,Cell Number,ID Number,Department,Company,Temporary Password
+John Smith,john.smith@company.com,+27 12 345 6789,1234567890123,Administration,ABC Company,TempPass123
+Jane Doe,jane.doe@company.com,+27 11 987 6543,9876543210987,Human Resources,XYZ Corp,TempPass456
+Mike Johnson,mike.johnson@company.com,+27 21 555 5555,5555555555555,Finance,DEF Ltd,TempPass789`;
 
             const blob = new Blob([templateData], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
@@ -2342,7 +2832,7 @@ Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             
-            alert('📥 Import Template Downloaded!\n\nThe template includes:\n• Sample data format\n• Required columns\n• Department options\n\nFill in your learner data and upload the file to import multiple learners at once.');
+            alert('📥 Import Template Downloaded!\n\nThe template includes:\n• Sample data format\n• Required columns (including Cell Number)\n• Department options\n• SMS and Email notification setup\n\nFill in your learner data and upload the file to import multiple learners at once.');
         }
 
         let importPreviewData = [];
@@ -2371,7 +2861,7 @@ Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`
             const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
             
             // Validate headers
-            const requiredHeaders = ['Full Name', 'Email', 'ID Number', 'Department', 'Company', 'Temporary Password'];
+            const requiredHeaders = ['Full Name', 'Email', 'Cell Number', 'ID Number', 'Department', 'Company', 'Temporary Password'];
             const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
             
             if (missingHeaders.length > 0) {
@@ -2389,14 +2879,15 @@ Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`
 
                 const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
                 
-                if (values.length >= 6) {
+                if (values.length >= 7) {
                     const learnerData = {
                         name: values[0],
                         email: values[1],
-                        idNumber: values[2],
-                        department: values[3],
-                        company: values[4],
-                        password: values[5]
+                        cellNumber: values[2],
+                        idNumber: values[3],
+                        department: values[4],
+                        company: values[5],
+                        password: values[6]
                     };
 
                     // Check for duplicates
@@ -2439,12 +2930,14 @@ Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`
             }
 
             let importedCount = 0;
+            let notificationsSent = 0;
             
             validLearners.forEach(learnerData => {
                 const newLearner = {
                     id: users.length + 1,
                     name: learnerData.name,
                     email: learnerData.email,
+                    cellNumber: learnerData.cellNumber,
                     idNumber: learnerData.idNumber,
                     password: learnerData.password,
                     type: 'intern',
@@ -2458,6 +2951,7 @@ Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`
 
                 users.push(newLearner);
                 initializeLearnerProgress(newLearner.id);
+                
                 importedCount++;
             });
 
@@ -2465,7 +2959,7 @@ Mike Johnson,mike.johnson@company.com,5555555555555,Finance,DEF Ltd,TempPass789`
             loadLearnersTable();
             updateAdminStats();
             
-            alert(`✅ Import Completed Successfully!\n\nImported: ${importedCount} learners\nSkipped duplicates: ${importPreviewData.length - importedCount}\n\nAll imported learners can now login and start their courses.`);
+            alert(`✅ Import Completed Successfully!\n\nImported: ${importedCount} learners\nSkipped duplicates: ${importPreviewData.length - importedCount}\n\nAll imported learners can now login with their credentials and start their courses immediately.`);
         }
 
         // Override the import form submission to use confirmation
@@ -3114,13 +3608,436 @@ ${evidence.feedback ? `Feedback: ${evidence.feedback}` : ''}
             alert(`🗑️ Enrollment Removed\n\n${user.name} has been removed from "${course.title}" and all associated data has been deleted.`);
         }
 
-        // Initialize system
-        console.log('🚀 GWConnect LMS Professional System Initialized');
-        console.log('📧 Contact: info@gwconnect.org');
-        console.log('📞 Phone: 012 001 4230');
-        console.log('📍 Address: 385 Roslyn Avenue, Waterkloof Glen, Pretoria');
-        console.log('🎯 System Capacity: 100+ concurrent interns');
-        console.log('📚 Features: Practical exercises, Evidence submission, Logbook generation, Course enrollment system');
+        // Gamification functions
+        function initializeUserStats(userId) {
+            if (!userStats.find(stat => stat.userId === userId)) {
+                userStats.push({
+                    userId: userId,
+                    totalPoints: 0,
+                    currentStreak: 0,
+                    longestStreak: 0,
+                    lastActivity: new Date()
+                });
+            }
+        }
+
+        function checkAchievements(userId, action, data = {}) {
+            const userAchievementIds = userAchievements.filter(ua => ua.userId === userId).map(ua => ua.achievementId);
+            const newAchievements = [];
+
+            achievements.forEach(achievement => {
+                if (userAchievementIds.includes(achievement.id)) return;
+
+                let earned = false;
+
+                switch (achievement.requirement) {
+                    case 'start_first_module':
+                        if (action === 'module_started') earned = true;
+                        break;
+                    case 'first_evidence':
+                        if (action === 'evidence_submitted') {
+                            const userEvidence = evidenceSubmissions.filter(sub => sub.userId === userId);
+                            if (userEvidence.length === 1) earned = true;
+                        }
+                        break;
+                    case 'quick_completion':
+                        if (action === 'module_completed' && data.completionTime <= 3) earned = true;
+                        break;
+                    case 'approved_evidence_5':
+                        if (action === 'evidence_approved') {
+                            const approvedCount = evidenceSubmissions.filter(sub => sub.userId === userId && sub.approved).length;
+                            if (approvedCount >= 5) earned = true;
+                        }
+                        break;
+                    case 'streak_7':
+                        if (action === 'activity') {
+                            const userStat = userStats.find(stat => stat.userId === userId);
+                            if (userStat && userStat.currentStreak >= 7) earned = true;
+                        }
+                        break;
+                    case 'halfway_complete':
+                        if (action === 'progress_update') {
+                            const userLogbook = logbookEntries.filter(entry => entry.userId === userId);
+                            const completedModules = userLogbook.filter(entry => entry.status === 'Completed').length;
+                            const progress = userLogbook.length > 0 ? (completedModules / userLogbook.length) * 100 : 0;
+                            if (progress >= 50) earned = true;
+                        }
+                        break;
+                    case 'course_complete':
+                        if (action === 'course_completed') earned = true;
+                        break;
+                    case 'early_submission':
+                        if (action === 'evidence_submitted' && data.isEarly) earned = true;
+                        break;
+                    case 'quality_reflection':
+                        if (action === 'evidence_submitted' && data.reflectionLength > 200) earned = true;
+                        break;
+                }
+
+                if (earned) {
+                    const userAchievement = {
+                        userId: userId,
+                        achievementId: achievement.id,
+                        earnedDate: new Date(),
+                        notified: false
+                    };
+                    userAchievements.push(userAchievement);
+                    newAchievements.push(achievement);
+                    
+                    // Award points
+                    const userStat = userStats.find(stat => stat.userId === userId);
+                    if (userStat) {
+                        const points = getAchievementPoints(achievement.type);
+                        userStat.totalPoints += points;
+                    }
+                }
+            });
+
+            // Show achievement notifications
+            if (newAchievements.length > 0 && currentUser && currentUser.id === userId) {
+                showAchievementNotifications(newAchievements);
+            }
+
+            return newAchievements;
+        }
+
+        function getAchievementPoints(type) {
+            const pointValues = {
+                'milestone': 100,
+                'performance': 150,
+                'quality': 200,
+                'engagement': 125,
+                'social': 175
+            };
+            return pointValues[type] || 100;
+        }
+
+        function showAchievementNotifications(achievements) {
+            let currentIndex = 0;
+            
+            function showNext() {
+                if (currentIndex >= achievements.length) return;
+                
+                const achievement = achievements[currentIndex];
+                const points = getAchievementPoints(achievement.type);
+                
+                document.getElementById('achievementIcon').textContent = achievement.icon;
+                document.getElementById('achievementName').textContent = achievement.name;
+                document.getElementById('achievementDescription').textContent = achievement.description;
+                document.getElementById('achievementPoints').textContent = points;
+                
+                document.getElementById('achievementModal').classList.remove('hidden');
+                
+                currentIndex++;
+            }
+            
+            showNext();
+            
+            // Auto-advance after 3 seconds if user doesn't click
+            setTimeout(() => {
+                if (!document.getElementById('achievementModal').classList.contains('hidden')) {
+                    closeAchievementModal();
+                }
+            }, 3000);
+        }
+
+        function closeAchievementModal() {
+            document.getElementById('achievementModal').classList.add('hidden');
+            
+            // Show next achievement if any
+            setTimeout(() => {
+                const visibleModal = !document.getElementById('achievementModal').classList.contains('hidden');
+                if (!visibleModal) {
+                    // Check if there are more achievements to show
+                    const unnotifiedAchievements = userAchievements.filter(ua => 
+                        ua.userId === currentUser.id && !ua.notified
+                    );
+                    
+                    if (unnotifiedAchievements.length > 0) {
+                        const nextAchievement = achievements.find(a => a.id === unnotifiedAchievements[0].achievementId);
+                        if (nextAchievement) {
+                            showAchievementNotifications([nextAchievement]);
+                            unnotifiedAchievements[0].notified = true;
+                        }
+                    }
+                }
+            }, 500);
+        }
+
+        function updateUserStreak(userId) {
+            const userStat = userStats.find(stat => stat.userId === userId);
+            if (!userStat) return;
+
+            const today = new Date();
+            const lastActivity = new Date(userStat.lastActivity);
+            const daysDiff = Math.floor((today - lastActivity) / (1000 * 60 * 60 * 24));
+
+            if (daysDiff === 1) {
+                // Consecutive day
+                userStat.currentStreak++;
+                userStat.longestStreak = Math.max(userStat.longestStreak, userStat.currentStreak);
+            } else if (daysDiff > 1) {
+                // Streak broken
+                userStat.currentStreak = 1;
+            }
+            // If daysDiff === 0, same day activity, no change to streak
+
+            userStat.lastActivity = today;
+            
+            // Check streak achievements
+            checkAchievements(userId, 'activity');
+        }
+
+        function loadAchievementsSection() {
+            if (!currentUser) return;
+            
+            const userAchievementIds = userAchievements.filter(ua => ua.userId === currentUser.id).map(ua => ua.achievementId);
+            const userStat = userStats.find(stat => stat.userId === currentUser.id) || { totalPoints: 0, currentStreak: 0 };
+            const earnedCount = userAchievementIds.length;
+            const completionRate = Math.round((earnedCount / achievements.length) * 100);
+
+            // Update stats
+            document.getElementById('achievementsEarnedCount').textContent = earnedCount + '/' + achievements.length;
+            document.getElementById('totalPointsCount').textContent = userStat.totalPoints;
+            document.getElementById('currentStreakCount').textContent = userStat.currentStreak + ' days';
+            document.getElementById('achievementCompletionRate').textContent = completionRate + '%';
+
+            // Load recent achievements
+            loadRecentAchievements();
+            
+            // Load all achievements
+            loadAllAchievements('all');
+        }
+
+        function loadRecentAchievements() {
+            const recentContainer = document.getElementById('recentAchievements');
+            const userRecentAchievements = userAchievements
+                .filter(ua => ua.userId === currentUser.id)
+                .sort((a, b) => b.earnedDate - a.earnedDate)
+                .slice(0, 3);
+
+            if (userRecentAchievements.length === 0) {
+                recentContainer.innerHTML = '<p class="text-gray-500 text-center py-4">Complete your first module to start earning achievements! 🚀</p>';
+                return;
+            }
+
+            recentContainer.innerHTML = '';
+            
+            userRecentAchievements.forEach(userAchievement => {
+                const achievement = achievements.find(a => a.id === userAchievement.achievementId);
+                const points = getAchievementPoints(achievement.type);
+                
+                const achievementElement = document.createElement('div');
+                achievementElement.className = 'flex items-center space-x-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200';
+                achievementElement.innerHTML = `
+                    <div class="text-3xl">${achievement.icon}</div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900">${achievement.name}</h4>
+                        <p class="text-sm text-gray-600">${achievement.description}</p>
+                        <p class="text-xs text-gray-500 mt-1">Earned ${userAchievement.earnedDate.toLocaleDateString()}</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-yellow-600">+${points}</div>
+                        <div class="text-xs text-gray-500">points</div>
+                    </div>
+                `;
+                recentContainer.appendChild(achievementElement);
+            });
+        }
+
+        function loadAllAchievements(filter = 'all') {
+            const grid = document.getElementById('achievementsGrid');
+            const userAchievementIds = userAchievements.filter(ua => ua.userId === currentUser.id).map(ua => ua.achievementId);
+            
+            grid.innerHTML = '';
+            
+            let filteredAchievements = achievements;
+            if (filter === 'earned') {
+                filteredAchievements = achievements.filter(a => userAchievementIds.includes(a.id));
+            } else if (filter === 'locked') {
+                filteredAchievements = achievements.filter(a => !userAchievementIds.includes(a.id));
+            }
+            
+            filteredAchievements.forEach(achievement => {
+                const isEarned = userAchievementIds.includes(achievement.id);
+                const points = getAchievementPoints(achievement.type);
+                const userAchievement = userAchievements.find(ua => ua.userId === currentUser.id && ua.achievementId === achievement.id);
+                
+                const achievementElement = document.createElement('div');
+                achievementElement.className = `border rounded-lg p-6 transition-all duration-200 ${
+                    isEarned 
+                        ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 shadow-md' 
+                        : 'bg-gray-50 border-gray-200 opacity-75'
+                }`;
+                
+                achievementElement.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-4xl mb-3 ${isEarned ? '' : 'grayscale'}">${achievement.icon}</div>
+                        <h4 class="font-semibold text-gray-900 mb-2">${achievement.name}</h4>
+                        <p class="text-sm text-gray-600 mb-3">${achievement.description}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs px-2 py-1 rounded-full ${
+                                achievement.type === 'milestone' ? 'bg-blue-100 text-blue-800' :
+                                achievement.type === 'performance' ? 'bg-green-100 text-green-800' :
+                                achievement.type === 'quality' ? 'bg-purple-100 text-purple-800' :
+                                achievement.type === 'engagement' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                            }">${achievement.type}</span>
+                            <span class="text-sm font-semibold text-yellow-600">+${points} pts</span>
+                        </div>
+                        ${isEarned ? `
+                            <div class="mt-3 text-xs text-green-600 font-medium">
+                                ✅ Earned ${userAchievement.earnedDate.toLocaleDateString()}
+                            </div>
+                        ` : `
+                            <div class="mt-3 text-xs text-gray-500">
+                                🔒 Not yet earned
+                            </div>
+                        `}
+                    </div>
+                `;
+                
+                grid.appendChild(achievementElement);
+            });
+        }
+
+        function filterAchievements(filter) {
+            // Update button styles
+            document.querySelectorAll('.achievement-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-light-green', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-light-green', 'text-white');
+            
+            loadAllAchievements(filter);
+        }
+
+
+
+        // Initialize system and set up event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize default course for learners
+            currentCourse = courses[0];
+            
+            // Set up all event listeners
+            setupEventListeners();
+            
+            console.log('🚀 GWConnect LMS Professional System Initialized');
+            console.log('📧 Contact: info@gwconnect.co.za');
+            console.log('📞 Phone: 012 001 4230');
+            console.log('📍 Address: 385 Roslyn Avenue, Waterkloof Glen, Pretoria');
+            console.log('🎯 System Capacity: 100+ concurrent interns');
+            console.log('📚 Features: Practical exercises, Evidence submission, Logbook generation, Course enrollment system');
+        });
+
+        function setupEventListeners() {
+            // Landing page buttons
+            const loginBtns = document.querySelectorAll('button[onclick="showLogin()"]');
+            loginBtns.forEach(btn => {
+                btn.onclick = showLogin;
+            });
+
+            const registerBtns = document.querySelectorAll('button[onclick="showRegister()"]');
+            registerBtns.forEach(btn => {
+                btn.onclick = showRegister;
+            });
+
+            const demoBtns = document.querySelectorAll('button[onclick="showDemo()"]');
+            demoBtns.forEach(btn => {
+                btn.onclick = showDemo;
+            });
+
+            // Modal close buttons
+            const closeBtns = document.querySelectorAll('button[onclick="closeModal()"]');
+            closeBtns.forEach(btn => {
+                btn.onclick = closeModal;
+            });
+
+            // Form submissions
+            const loginForm = document.querySelector('#loginModal form');
+            if (loginForm) {
+                loginForm.onsubmit = handleLogin;
+            }
+
+            const registerForm = document.querySelector('#registerModal form');
+            if (registerForm) {
+                registerForm.onsubmit = handleRegister;
+            }
+
+            // Registration type change
+            const regType = document.getElementById('registrationType');
+            if (regType) {
+                regType.onchange = toggleRegistrationFields;
+            }
+
+            // Admin navigation - Fix the onclick handlers
+            document.querySelector('button[onclick="showAdminSection(\'overview\')"]').onclick = () => showAdminSection('overview');
+            document.querySelector('button[onclick="showAdminSection(\'learners\')"]').onclick = () => showAdminSection('learners');
+            document.querySelector('button[onclick="showAdminSection(\'courses\')"]').onclick = () => showAdminSection('courses');
+            document.querySelector('button[onclick="showAdminSection(\'enrollments\')"]').onclick = () => showAdminSection('enrollments');
+            document.querySelector('button[onclick="showAdminSection(\'reports\')"]').onclick = () => showAdminSection('reports');
+            document.querySelector('button[onclick="showAdminSection(\'evidence\')"]').onclick = () => showAdminSection('evidence');
+
+            // Learner navigation - Fix the onclick handlers
+            document.querySelector('button[onclick="showLearnerSection(\'overview\')"]').onclick = () => showLearnerSection('overview');
+            document.querySelector('button[onclick="showLearnerSection(\'progress\')"]').onclick = () => showLearnerSection('progress');
+            document.querySelector('button[onclick="showLearnerSection(\'achievements\')"]').onclick = () => showLearnerSection('achievements');
+            document.querySelector('button[onclick="showLearnerSection(\'evidence\')"]').onclick = () => showLearnerSection('evidence');
+            document.querySelector('button[onclick="showLearnerSection(\'reports\')"]').onclick = () => showLearnerSection('reports');
+            document.querySelector('button[onclick="showLearnerSection(\'support\')"]').onclick = () => showLearnerSection('support');
+
+            // Other buttons
+            const logoutBtns = document.querySelectorAll('button[onclick="logout()"]');
+            logoutBtns.forEach(btn => {
+                btn.onclick = logout;
+            });
+
+            const switchBtns = document.querySelectorAll('button[onclick="switchToLearnerView()"]');
+            switchBtns.forEach(btn => {
+                btn.onclick = switchToLearnerView;
+            });
+
+            const backBtns = document.querySelectorAll('button[onclick="switchBackToAdmin()"]');
+            backBtns.forEach(btn => {
+                btn.onclick = switchBackToAdmin;
+            });
+        }
+
+        // Fix module interaction functions
+        function startModule(moduleId, courseId) {
+            if (!currentUser) return;
+            
+            const userLogbook = logbookEntries.find(entry => entry.userId === currentUser.id && entry.moduleId === moduleId);
+            if (userLogbook) {
+                userLogbook.status = 'In Progress';
+                userLogbook.startDate = new Date();
+            }
+            
+            // Update streak and check for first module achievement
+            updateUserStreak(currentUser.id);
+            checkAchievements(currentUser.id, 'module_started');
+            
+            alert('📚 Module Started!\n\nYou can now begin working on the practical exercise. Remember to document your work as you go - you\'ll need to submit evidence when you complete the exercise.');
+            loadLearnerCourse();
+        }
+
+        function submitEvidence(moduleId, courseId) {
+            if (!currentUser) return;
+            
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            const module = course.modules.find(m => m.id === moduleId);
+            if (!module) return;
+
+            document.getElementById('evidenceModuleId').value = moduleId;
+            document.getElementById('evidenceModuleName').value = module.title;
+            document.getElementById('evidenceInstructions').textContent = module.exercise;
+            
+            document.getElementById('evidenceModal').classList.remove('hidden');
+        }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ef6dfd908d9863',t:'MTc1NTE2Mzc4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96f0305b44d44ec0',t:'MTc1NTE3MTc0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
